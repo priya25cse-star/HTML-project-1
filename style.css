@@ -115,11 +115,9 @@ width: 50%;
 .about-image img {
 width: 100%;
 
-```
 opacity: 0.75;
 
 border-radius: 4px;
-```
 
 }
 
@@ -127,9 +125,7 @@ border-radius: 4px;
 width: 50%;
 font-size: 20px;
 
-```
 padding: 20px;
-```
 
 }
 
@@ -161,9 +157,7 @@ padding: 20px;
 .about-content span {
 background-color: #eee;
 
-```
 padding: 4px;
-```
 
 }
 
@@ -179,13 +173,11 @@ HORIZONTAL LINE
 hr {
 max-width: 1100px;
 
-```
 margin: auto;
 
 border: none;
 
 border-top: 1px solid #ddd;
-```
 
 }
 
@@ -213,7 +205,6 @@ font-size: 30px;
 .menu-content h1 {
 text-align: center;
 
-```
 font-size: 36px;
 
 font-weight: normal;
@@ -221,7 +212,6 @@ font-weight: normal;
 letter-spacing: 3px;
 
 margin-bottom: 45px;
-```
 
 }
 
@@ -232,7 +222,6 @@ margin-bottom: 35px;
 .menu-item h3 {
 font-size: 20px;
 
-```
 font-weight: normal;
 
 letter-spacing: 4px;
@@ -240,18 +229,15 @@ letter-spacing: 4px;
 margin-bottom: 15px;
 
 font-weight: 500;
-```
 
 }
 
 .menu-item p {
 font-family: Arial, sans-serif;
 
-```
 color: #777;
 
 font-size: 13px;
-```
 
 }
 
@@ -262,11 +248,9 @@ width: 50%;
 .menu-image img {
 width: 100%;
 
-```
 opacity: 0.75;
 
 border-radius: 4px;
-```
 
 }
 
@@ -280,6 +264,10 @@ CONTACT SECTION
     padding: 40px 20px;
 
     text-align: left;
+}
+
+.contact-page {
+    margin-top: 135px;
 }
 
 
@@ -533,7 +521,6 @@ RESPONSIVE DESIGN
     gap: 18px;
 }
 
-```
 .navbar {
     padding: 0 10px;
 }
@@ -579,7 +566,6 @@ RESPONSIVE DESIGN
 .contact {
     margin: 40px auto;
 }
-```
 
 }
 
