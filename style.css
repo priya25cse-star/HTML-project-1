@@ -40,7 +40,6 @@ header {
 
     padding: 0 30px;
 
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 
     z-index: 1000;
 }
@@ -68,9 +67,6 @@ header {
     display: inline-block;
 }
 
-.navbar a:hover {
-    background-color: #ddd;
-}
 
 /* =========================
 HERO SECTION
@@ -389,10 +385,153 @@ footer a {
 }
 
 /* =========================
+DEDICATED MENU PAGE
+========================= */
+
+.menu-page-hero {
+    position: relative;
+    width: 100%;
+    margin-top: 55px;
+}
+
+.menu-page-hero img {
+    width: 100%;
+    max-height: 520px;
+    object-fit: cover;
+    display: block;
+    opacity: 0.82;
+}
+
+.menu-page-content {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 80px 20px 100px;
+}
+
+.menu-page-intro {
+    max-width: 650px;
+    margin: 0 auto 65px;
+    text-align: center;
+}
+
+.menu-eyebrow {
+    color: #607d8b;
+    font-family: Arial, sans-serif;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin-bottom: 18px;
+}
+
+.menu-page-intro h1 {
+    font-size: 42px;
+    font-weight: normal;
+    letter-spacing: 3px;
+    line-height: 1.2;
+    margin-bottom: 22px;
+}
+
+.menu-page-intro > p:last-child {
+    color: #777;
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+.menu-page-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 70px;
+}
+
+.menu-category h2 {
+    border-bottom: 1px solid #ddd;
+    font-size: 25px;
+    font-weight: normal;
+    letter-spacing: 3px;
+    padding-bottom: 18px;
+    margin-bottom: 8px;
+}
+
+.menu-page-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    border-bottom: 1px solid #eee;
+    padding: 25px 0;
+}
+
+.menu-page-item h3 {
+    font-size: 18px;
+    font-weight: normal;
+    letter-spacing: 2px;
+    margin-bottom: 9px;
+}
+
+.menu-page-item p {
+    color: #777;
+    font-family: Arial, sans-serif;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.menu-page-item span {
+    color: #607d8b;
+    font-size: 17px;
+    white-space: nowrap;
+}
+
+.home-info {
+    max-width: 1100px;
+    margin: 80px auto;
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.home-info h1 {
+    font-size: 34px;
+    font-weight: normal;
+    letter-spacing: 3px;
+    margin-bottom: 18px;
+}
+
+.home-info p {
+    color: #777;
+    font-size: 17px;
+    margin-bottom: 30px;
+}
+
+.home-info-items {
+    display: flex;
+    justify-content: center;
+    gap: 45px;
+    color: #607d8b;
+    font-size: 15px;
+    letter-spacing: 2px;
+}
+
+/* =========================
 RESPONSIVE DESIGN
 ========================= */
 
 @media (max-width: 768px) {
+
+.menu-page-content {
+    padding: 55px 20px 70px;
+}
+
+.menu-page-intro h1 {
+    font-size: 32px;
+}
+
+.menu-page-grid {
+    grid-template-columns: 1fr;
+    gap: 45px;
+}
+
+.home-info-items {
+    flex-direction: column;
+    gap: 18px;
+}
 
 ```
 .navbar {
