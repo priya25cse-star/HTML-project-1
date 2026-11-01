@@ -7,14 +7,13 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    
-    <!-- Updated by Jyoti -->
-    <!-- Shared site navigation -->
+
     <header>
         <nav class="navbar">
             <div class="logo">
                 <a href="Index.html#home">Gourmet au Catering</a>
             </div>
+
             <div class="nav-links">
                 <a href="Index.html#about">About</a>
                 <a href="Menu.html">Menu</a>
@@ -23,27 +22,43 @@
         </nav>
     </header>
 
-    <!-- Contact details and booking form -->
     <main>
         <section class="contact contact-page">
             <h1>Contact</h1>
+
             <p>We offer full-service catering for any event, large or small. Seasonal ingredients and thoughtful service for every gathering.</p>
+
             <h3>Catering Service, 42nd Living St, 43043 New York, NY</h3>
+
             <p>Phone 00553123-2323 or email catering@catering.com.</p>
 
-            <form>
-                <input type="text" placeholder="Name" required>
-                <input type="number" placeholder="How many people" required>
-                <input type="datetime-local" required>
-                <input type="text" placeholder="Message / Special requirements">
-                <button type="submit">SEND MESSAGE</button>
-            </form>
+            <!-- Contact Form -->
+            <form id="contactForm">
+
+    <input type="text" name="name" placeholder="Name" required>
+
+    <input type="number" name="people" placeholder="How many people" min="1" required>
+
+    <input type="date" name="date" required>
+
+    <input type="text" name="message" placeholder="Message / Special requirements">
+
+    <button type="submit">SEND MESSAGE</button>
+
+</form>
+
+<script>
+    document.getElementById("contactForm").addEventListener("submit", function(event) {
+        event.preventDefault();
+        window.location.href = "./thankyou.html";
+    });
+</script>
         </section>
     </main>
 
-    <!-- Site footer -->
     <footer>
         <p>Made by Pranav, Priya, Jyoti</p>
     </footer>
+
 </body>
 </html>
