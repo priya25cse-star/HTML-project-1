@@ -49,6 +49,40 @@
         .thankyou-page a:hover {
             background-color: #ccc;
         }
+        /* Fade-in animation */
+.thankyou-page {
+    animation: fadeIn 1s ease-in;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+    .thankyou-page {
+        padding: 100px 15px;
+    }
+
+    .thankyou-page h1 {
+        font-size: 32px;
+    }
+
+    .thankyou-page p {
+        font-size: 16px;
+    }
+
+    .thankyou-page a {
+        padding: 10px 18px;
+    }
+}
     </style>
 </head>
 
