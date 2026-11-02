@@ -9,17 +9,29 @@
 <body>
 
     <header>
-        <nav class="navbar">
-            <div class="logo">
-                <a href="Index.html#home">Gourmet au Catering</a>
-            </div>
+        <nav class="navbar" aria-label="Main navigation">
 
-            <div class="nav-links">
-                <a href="Index.html#about">About</a>
-                <a href="Menu.html">Menu</a>
-                <a href="Contact.html" aria-current="page">Contact</a>
-            </div>
-        </nav>
+    <div class="logo">
+        <a href="Index.html#home">Gourmet au Catering</a>
+    </div>
+
+    <button
+        class="menu-toggle"
+        id="menuToggle"
+        type="button"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+    >
+        ☰
+    </button>
+
+    <div class="nav-links" id="navLinks">
+        <a href="Index.html#about">About</a>
+        <a href="Menu.html">Menu</a>
+        <a href="Contact.html">Contact</a>
+    </div>
+
+</nav>
     </header>
 
     <main>
@@ -35,13 +47,54 @@
             <!-- Contact Form -->
             <form id="contactForm">
 
-    <input type="text" name="name" placeholder="Name" required>
+    <input
+        type="text"
+        id="name"
+        name="name"
+        placeholder="Name"
+        required
 
-    <input type="number" name="people" placeholder="How many people" min="1" required>
+    >
+    <input
+    type="tel"
+    id="phone"
+    name="phone"
+    placeholder="Phone Number"
+    pattern="[0-9]{10}"
+    maxlength="10"
+    required
+    >
 
-    <input type="date" name="date" required>
 
-    <input type="text" name="message" placeholder="Message / Special requirements">
+    <input
+        type="number"
+        id="people"
+        name="people"
+        placeholder="How many people"
+        min="1"
+        required
+    >
+
+    <input
+        type="date"
+        id="date"
+        name="date"
+        required
+    >
+
+    <textarea
+    id="message"
+    name="message"
+    placeholder="Message / Special requirements"
+    maxlength="200"
+    rows="4"
+></textarea>
+
+<p id="characterCounter">200 characters remaining</p>
+
+    <p id="livePreview"></p>
+
+    <p id="responseMessage"></p>
 
     <button type="submit">SEND MESSAGE</button>
 
@@ -59,6 +112,6 @@
     <footer>
         <p>Made by Pranav, Priya, Jyoti</p>
     </footer>
-
+<script src="script.js"></script>
 </body>
 </html>
