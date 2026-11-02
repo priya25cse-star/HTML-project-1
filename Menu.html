@@ -9,15 +9,28 @@
 <body class="menu-page">
     <header>
         <nav class="navbar" aria-label="Main navigation">
-            <div class="logo">
-                <a href="Index.html#home">Gourmet au Catering</a>
-            </div>
-            <div class="nav-links">
-                <a href="Index.html#about">About</a>
-                <a href="Menu.html" aria-current="page">Menu</a>
-                <a href="Contact.html">Contact</a>
-            </div>
-        </nav>
+
+    <div class="logo">
+        <a href="Index.html#home">Gourmet au Catering</a>
+    </div>
+
+    <button
+        class="menu-toggle"
+        id="menuToggle"
+        type="button"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+    >
+        ☰
+    </button>
+
+    <div class="nav-links" id="navLinks">
+        <a href="Index.html#about">About</a>
+        <a href="Menu.html">Menu</a>
+        <a href="Contact.html">Contact</a>
+    </div>
+
+</nav>
     </header>
 
     <main>
@@ -46,6 +59,24 @@
     dishes, perfect for every gathering.
 </p>
             </div>
+            <div class="menu-controls">
+
+    <input
+        type="search"
+        id="menuSearch"
+        placeholder="Search food items..."
+        aria-label="Search food items"
+    >
+
+    <div class="category-filters">
+        <button type="button" data-filter="all">All</button>
+        <button type="button" data-filter="breakfast">Breakfast</button>
+        <button type="button" data-filter="kitchen">From the Kitchen</button>
+    </div>
+
+</div>
+
+<p id="menuNoResults" hidden>No matching food items found.</p>
 
             <div class="menu-page-grid">
                 <section class="menu-category" aria-labelledby="breakfast-heading">
@@ -82,6 +113,36 @@
             </div>
         </section>
     </main>
+    <section class="order-cart" id="orderCart">
+
+    <h2>Your Order</h2>
+
+    <div id="cartItems">
+        <p>Your cart is empty.</p>
+    </div>
+
+    <p>
+        Total: <strong id="cartTotal">$0.00</strong>
+    </p>
+
+    <button type="button" id="placeOrder">
+        Place Order
+    </button>
+
+    <p id="orderMessage" role="status"></p>
+
+</section>
+    <div class="special-section">
+
+    <h2>Today's Special</h2>
+
+    <button id="specialButton" type="button">
+        View Today's Special
+    </button>
+
+    <p id="specialMessage"></p>
+
+</div>
 
     <footer>
         <p>
@@ -89,5 +150,6 @@
     <a href="Contact.html">Gourmet au Catering</a>
 </p>
     </footer>
+    <script src="script.js"></script>
 </body>
 </html>
