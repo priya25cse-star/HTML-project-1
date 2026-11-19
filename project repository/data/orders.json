@@ -1,0 +1,20 @@
+[
+    {
+        "id": "a426c375-502b-4a16-a8ca-0d4a02d1e8bf",
+        "items": [
+            {
+                "name": "Belgian Waffle",
+                "quantity": 1,
+                "price": 7.5
+            },
+            {
+                "name": "Seasonal Garden Plate",
+                "quantity": 1,
+                "price": 9.5
+            }
+        ],
+        "total": 17,
+        "status": "Pending",
+        "createdAt": "2026-11-16T17:23:18.655Z"
+    }
+]

@@ -1,0 +1,32 @@
+[
+    {
+        "id": "ee83eb50-ee07-4ba4-9465-3504b3e4438a",
+        "name": "Priya",
+        "phone": "8930244608",
+        "people": 1,
+        "date": "2026-12-11",
+        "message": "njkhdak,jn",
+        "status": "Pending",
+        "createdAt": "2026-11-16T16:15:15.993Z"
+    },
+    {
+        "id": "20cd7c72-6c4e-4003-b627-2e3df2600bdd",
+        "name": "Priya",
+        "phone": "8930244608",
+        "people": 1,
+        "date": "2026-12-12",
+        "message": "restaurant booking",
+        "status": "Pending",
+        "createdAt": "2026-11-16T16:49:55.418Z"
+    },
+    {
+        "id": "42c891ae-885d-4d03-8c78-97b00788a007",
+        "name": "priya",
+        "phone": "8930244608",
+        "people": 1,
+        "date": "2027-08-19",
+        "message": "table booking",
+        "status": "Pending",
+        "createdAt": "2026-11-16T17:32:40.220Z"
+    }
+]
