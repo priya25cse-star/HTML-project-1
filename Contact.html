@@ -1,117 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contact | Gourmet au Catering</title>
+    <meta
+      name="description"
+      content="Seasonal menus and thoughtful catering for private dinners, corporate events and celebrations. Gourmet au Catering."
+   >
+    <title>Plan your gathering | Gourmet au Catering</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
     <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-    <header>
-        <nav class="navbar" aria-label="Main navigation">
-
-    <div class="logo">
-        <a href="Index.html#home">Gourmet au Catering</a>
-    </div>
-
-    <button
-        class="menu-toggle"
-        id="menuToggle"
-        type="button"
-        aria-label="Open navigation menu"
-        aria-expanded="false"
-    >
-        ☰
-    </button>
-
-    <div class="nav-links" id="navLinks">
-        <a href="Index.html#about">About</a>
-        <a href="Menu.html">Menu</a>
-        <a href="Contact.html">Contact</a>
-    </div>
-
-</nav>
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <nav class="navbar wrap" aria-label="Main navigation">
+        <a class="brand" href="Index.html"
+          ><span class="brand-mark" aria-hidden="true">g.</span
+          ><span
+            >Gourmet au Catering<small
+              >GOOD FOOD. BEAUTIFUL GATHERINGS.</small
+            ></span
+          ></a
+        ><button
+          class="menu-toggle"
+          id="menuToggle"
+          type="button"
+          aria-label="Open navigation menu"
+          aria-expanded="false"
+          aria-controls="navLinks"
+        >
+          Menu <span aria-hidden="true">&#9776;</span>
+        </button>
+        <div class="nav-links" id="navLinks">
+          <a href="Index.html">Home</a><a href="Index.html#about">Our story</a
+          ><a href="Menu.html">The menu</a
+          ><a class="button small" href="Contact.html"
+            >Plan your event <span aria-hidden="true">&nearr;</span></a
+          >
+        </div>
+      </nav>
     </header>
-
-    <main>
-        <section class="contact contact-page">
-            <h1>Contact</h1>
-
-            <p>We offer full-service catering for any event, large or small. Seasonal ingredients and thoughtful service for every gathering.</p>
-
-            <h3>Catering Service, 42nd Living St, 43043 New York, NY</h3>
-
-            <p>Phone 00553123-2323 or email catering@catering.com.</p>
-
-            <!-- Contact Form -->
-            <form id="contactForm">
-
-    <input
-        type="text"
-        id="name"
-        name="name"
-        placeholder="Name"
-        required
-
-    >
-    <input
-    type="tel"
-    id="phone"
-    name="phone"
-    placeholder="Phone Number"
-    pattern="[0-9]{10}"
-    maxlength="10"
-    required
-    >
-
-
-    <input
-        type="number"
-        id="people"
-        name="people"
-        placeholder="How many people"
-        min="1"
-        required
-    >
-
-    <input
-        type="date"
-        id="date"
-        name="date"
-        required
-    >
-
-    <textarea
-    id="message"
-    name="message"
-    placeholder="Message / Special requirements"
-    maxlength="200"
-    rows="4"
-></textarea>
-
-<p id="characterCounter">200 characters remaining</p>
-
-    <p id="livePreview"></p>
-
-    <p id="responseMessage"></p>
-
-    <button type="submit">SEND MESSAGE</button>
-
-</form>
-
-<script>
-    document.getElementById("contactForm").addEventListener("submit", function(event) {
-        event.preventDefault();
-        window.location.href = "./thankyou.html";
-    });
-</script>
+    <main id="main" class="wrap">
+      <section class="page-intro">
+        <p class="eyebrow">GOOD GATHERINGS START HERE</p>
+        <h1>Let&rsquo;s make it<br><em>an occasion.</em></h1>
+        <p>A few details from you. A thoughtfully catered gathering from us.</p>
+      </section>
+      <div class="contact-layout">
+        <aside class="contact-details">
+          <img
+            src="assets/hero.jpg"
+            alt="A dining room ready to welcome guests"
+            width="800"
+            height="600"
+         >
+          <h2>We&rsquo;ll take care<br>of <em>the table.</em></h2>
+          <p>
+            Private dinners, corporate events, and celebrations of every size.
+            Tell us what you have in mind, including any dietary requirements.
+          </p>
+          <div class="contact-step">
+            <span>01</span>
+            <p>
+              <strong>Share your plans</strong><br>Your date, your guests,
+              your ideas.
+            </p>
+          </div>
+          <div class="contact-step">
+            <span>02</span>
+            <p>
+              <strong>Let&rsquo;s shape your menu</strong><br>We&rsquo;ll follow up using
+              your phone number.
+            </p>
+          </div>
+          <div class="contact-step">
+            <span>03</span>
+            <p>
+              <strong>Enjoy your gathering</strong><br>Your booking is
+              reserved once confirmed.
+            </p>
+          </div>
+        </aside>
+        <section class="booking-panel" aria-labelledby="bookingHeading">
+          <p class="eyebrow">TELL US A LITTLE ABOUT YOUR EVENT</p>
+          <h2 id="bookingHeading">Save a place <em>for us.</em></h2>
+          <p class="muted">
+            All fields are required except special requirements.
+          </p>
+          <form id="contactForm">
+            <div class="form-grid">
+              <label for="name"
+                >Your name<input
+                  type="text"
+                  id="name"
+                  name="name"
+                  autocomplete="name"
+                  maxlength="100"
+                  required
+                  placeholder="Full name"></label
+              ><label for="phone"
+                >Phone number<input
+                  id="phone"
+                  name="phone"
+                  type="tel"
+                  autocomplete="tel"
+                  inputmode="numeric"
+                  pattern="[0-9]{10}"
+                  minlength="10"
+                  maxlength="10"
+                  required
+                  placeholder="10-digit phone number"
+               ><span class="field-help"
+                  >10 digits, without spaces or country code.</span
+                ></label
+              ><label for="people"
+                >Number of guests<input
+                  id="people"
+                  name="people"
+                  type="number"
+                  min="1"
+                  max="10000"
+                  step="1"
+                  required
+                  placeholder="e.g. 25"></label
+              ><label for="date"
+                >Event date<input
+                  id="date"
+                  name="date"
+                  type="date"
+                  required
+               ><span class="field-help"
+                  >Today or a future date, in India time.</span
+                ></label
+              >
+            </div>
+            <label for="message"
+              >Special requirements <span class="muted">(optional)</span
+              ><textarea
+                id="message"
+                name="message"
+                maxlength="200"
+                rows="4"
+                placeholder="Occasion, dietary needs, venue, or anything else we should know..."
+              ></textarea>
+            </label>
+            <p class="field-help" id="characterCounter">
+              200 characters remaining
+            </p>
+            <p id="livePreview" class="field-help" aria-live="polite"></p>
+            <button type="submit" class="button full">
+              Send booking request &nearr;
+            </button>
+            <p class="fine-print">
+              This is a booking request. Our team will confirm the details with
+              you.
+            </p>
+            <p id="responseMessage" class="form-message" role="status"></p>
+          </form>
         </section>
+      </div>
     </main>
-
-    <footer>
-        <p>Made by Pranav, Priya, Jyoti</p>
+    <footer class="site-footer">
+      <div class="wrap footer-grid">
+        <div>
+          <a class="footer-brand" href="Index.html"
+            >Gourmet au Catering<span class="accent">.</span></a
+          >
+          <p>
+            Seasonal food. Thoughtful service.<br>A little more joy around the
+            table.
+          </p>
+        </div>
+        <div>
+          <p class="eyebrow">COME GATHER WITH US</p>
+          <a href="Menu.html">Explore the menu &nearr;</a
+          ><a href="Contact.html">Plan a gathering &nearr;</a>
+        </div>
+        <div>
+          <p class="eyebrow">THE PROJECT</p>
+          <p>Made with care by<br>Pranav, Priya, Jyoti</p>
+          <a href="Admin.html">Staff sign in &nearr;</a>
+        </div>
+      </div>
+      <div class="wrap footer-bottom">
+        <span>&copy; 2026 Gourmet au Catering</span
+        ><span>A university catering website project</span>
+      </div>
     </footer>
-<script src="script.js"></script>
-</body>
+  </body>
 </html>

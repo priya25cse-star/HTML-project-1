@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta
+      name="description"
+      content="Seasonal menus and thoughtful catering for private dinners, corporate events and celebrations. Gourmet au Catering."
+   >
+    <title>Staff dashboard | Gourmet au Catering</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+    <script src="admin.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <nav class="navbar wrap" aria-label="Main navigation">
+        <a class="brand" href="Index.html"
+          ><span class="brand-mark" aria-hidden="true">g.</span
+          ><span
+            >Gourmet au Catering<small
+              >GOOD FOOD. BEAUTIFUL GATHERINGS.</small
+            ></span
+          ></a
+        ><button
+          class="menu-toggle"
+          id="menuToggle"
+          type="button"
+          aria-label="Open navigation menu"
+          aria-expanded="false"
+          aria-controls="navLinks"
+        >
+          Menu <span aria-hidden="true">&#9776;</span>
+        </button>
+        <div class="nav-links" id="navLinks">
+          <a href="Index.html">Home</a><a href="Index.html#about">Our story</a
+          ><a href="Menu.html">The menu</a
+          ><a class="button small" href="Contact.html"
+            >Plan your event <span aria-hidden="true">&nearr;</span></a
+          >
+        </div>
+      </nav>
+    </header>
+    <main id="main" class="wrap admin-page">
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">GOURMET AU CATERING / STAFF</p>
+          <h1>A little behind<br><em>the scenes.</em></h1>
+        </div>
+        <button type="button" class="button secondary" id="logout" hidden>
+          Sign out &nearr;
+        </button>
+      </div>
+      <p id="adminMessage" class="form-message" role="status"></p>
+      <section class="login-panel" id="loginPanel">
+        <h2>Welcome <em>back.</em></h2>
+        <p>Sign in to manage your menu and gatherings.</p>
+        <form id="loginForm">
+          <label for="username"
+            >Username<input
+              type="text"
+              id="username"
+              name="username"
+              autocomplete="username"
+              required
+              maxlength="100"></label
+          ><label for="password"
+            >Password<input
+              id="password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required
+              maxlength="200"></label
+          ><button type="submit" class="button full">Sign in &nearr;</button>
+        </form>
+      </section>
+      <section id="dashboard" hidden aria-label="Admin dashboard">
+        <div class="summary-grid">
+          <div><span>Menu items</span><strong id="summaryMenu">&mdash;</strong></div>
+          <div>
+            <span>Bookings</span><strong id="summaryBookings">&mdash;</strong>
+          </div>
+          <div><span>Orders</span><strong id="summaryOrders">&mdash;</strong></div>
+          <div>
+            <span>Pending requests</span><strong id="summaryPending">&mdash;</strong>
+          </div>
+        </div>
+        <div class="admin-toolbar">
+          <div
+            class="category-filters"
+            role="tablist"
+            aria-label="Management sections"
+          >
+            <button
+              type="button"
+              id="tabMenu"
+              role="tab"
+              aria-selected="true"
+              aria-controls="panelMenu"
+              data-tab="Menu"
+            >
+              Menu</button
+            ><button
+              type="button"
+              id="tabBookings"
+              role="tab"
+              aria-selected="false"
+              aria-controls="panelBookings"
+              tabindex="-1"
+              data-tab="Bookings"
+            >
+              Bookings</button
+            ><button
+              type="button"
+              id="tabOrders"
+              role="tab"
+              aria-selected="false"
+              aria-controls="panelOrders"
+              tabindex="-1"
+              data-tab="Orders"
+            >
+              Orders
+            </button>
+          </div>
+          <button class="text-link" type="button" id="refreshAdmin">
+            Refresh data &nearr;
+          </button>
+        </div>
+        <section id="panelMenu" role="tabpanel" aria-labelledby="tabMenu">
+          <div class="section-heading">
+            <h2>The seasonal <em>menu.</em></h2>
+            <button type="button" class="button small" id="addMenu">
+              Add menu item +
+            </button>
+          </div>
+          <div id="adminMenu"></div>
+        </section>
+        <section
+          id="panelBookings"
+          role="tabpanel"
+          aria-labelledby="tabBookings"
+          hidden
+        >
+          <h2>Upcoming <em>gatherings.</em></h2>
+          <div id="adminBookings"></div>
+        </section>
+        <section
+          id="panelOrders"
+          role="tabpanel"
+          aria-labelledby="tabOrders"
+          hidden
+        >
+          <h2>From the <em>order book.</em></h2>
+          <div id="adminOrders"></div>
+        </section>
+      </section>
+      <dialog id="menuDialog" aria-labelledby="menuDialogHeading">
+        <form id="menuForm">
+          <div class="section-heading">
+            <h2 id="menuDialogHeading">Menu item</h2>
+            <button
+              type="button"
+              class="icon-button"
+              id="closeMenuDialog"
+              aria-label="Close menu editor"
+            >
+              &times;
+            </button>
+          </div>
+          <input type="hidden" id="editMenuId"><label for="menuName"
+            >Name<input
+              type="text"
+              id="menuName"
+              required
+              maxlength="100"></label
+          ><label for="menuCategory"
+            >Category<input
+              type="text"
+              id="menuCategory"
+              required
+              maxlength="40"
+              list="categories"><datalist id="categories">
+              <option value="breakfast"></option>
+              <option value="kitchen"></option></datalist></label
+          ><label for="menuDescription"
+            >Description<textarea
+              id="menuDescription"
+              required
+              maxlength="300"
+              rows="3"
+            ></textarea>
+          </label>
+          <div class="form-grid">
+            <label for="menuPrice"
+              >Price (USD)<input
+                id="menuPrice"
+                type="number"
+                min="0.01"
+                max="10000"
+                step="0.01"
+                required></label
+            ><label for="menuAvailable"
+              >Availability<select id="menuAvailable">
+                <option value="true">Available</option>
+                <option value="false">Unavailable</option>
+              </select></label
+            >
+          </div>
+          <label for="menuImage"
+            >Image URL or asset path<input
+              type="text"
+              id="menuImage"
+              required
+              maxlength="1000"
+              placeholder="/assets/garden.jpg or https://example.com/image.jpg"
+         ></label>
+          <p id="menuFormMessage" class="form-message" role="status"></p>
+          <button class="button full" type="submit">Save menu item &nearr;</button>
+        </form>
+      </dialog>
+    </main>
+    <footer class="site-footer">
+      <div class="wrap footer-grid">
+        <div>
+          <a class="footer-brand" href="Index.html"
+            >Gourmet au Catering<span class="accent">.</span></a
+          >
+          <p>
+            Seasonal food. Thoughtful service.<br>A little more joy around the
+            table.
+          </p>
+        </div>
+        <div>
+          <p class="eyebrow">COME GATHER WITH US</p>
+          <a href="Menu.html">Explore the menu &nearr;</a
+          ><a href="Contact.html">Plan a gathering &nearr;</a>
+        </div>
+        <div>
+          <p class="eyebrow">THE PROJECT</p>
+          <p>Made with care by<br>Pranav, Priya, Jyoti</p>
+          <a href="Admin.html">Staff sign in &nearr;</a>
+        </div>
+      </div>
+      <div class="wrap footer-bottom">
+        <span>&copy; 2026 Gourmet au Catering</span
+        ><span>A university catering website project</span>
+      </div>
+    </footer>
+  </body>
+</html>
