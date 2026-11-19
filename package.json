@@ -1,0 +1,43 @@
+{
+  "name": "html-project-1",
+  "version": "1.0.0",
+  "description": "Gourmet au Catering: Express, JSON menu storage and MongoDB bookings and orders",
+  "main": "server.js",
+  "scripts": {
+    "test": "node --test --test-concurrency=1 tests/*.test.js",
+    "test:db": "node --test --test-concurrency=1 tests/mongodb.test.js",
+    "test:browser": "node tests/browser.cjs",
+    "check": "node scripts/check.js",
+    "dev": "node --watch server.js",
+    "start": "node server.js",
+    "setup": "node scripts/setup.js",
+    "diagnose:db": "node scripts/diagnose-db.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/priya25cse-star/HTML-project-1.git"
+  },
+  "keywords": [],
+  "author": "Pranav, Priya, Jyoti",
+  "license": "ISC",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=24"
+  },
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "express-rate-limit": "^8.2.1",
+    "helmet": "^8.1.0",
+    "mongoose": "^9.0.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "html-validate": "^11.21.1",
+    "supertest": "^7.1.4"
+  },
+  "bugs": {
+    "url": "https://github.com/priya25cse-star/HTML-project-1/issues"
+  },
+  "homepage": "https://github.com/priya25cse-star/HTML-project-1#readme"
+}

@@ -1,109 +1,215 @@
 <!DOCTYPE html>
-
 <html lang="en">
-<head>
+  <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gourmet Catering</title>
-
-```
-<!-- CSS File -->
-<link rel="stylesheet" href="style.css">
-```
-
-</head>
-
-<body>
-
-```
-<!-- Navigation Bar -->
-<header>
-    <nav class="navbar" aria-label="Main navigation">
-        <div class="logo">
-            <a href="#home">Gourmet au Catering</a>
+    <meta
+      name="description"
+      content="Seasonal menus and thoughtful catering for private dinners, corporate events and celebrations. Gourmet au Catering."
+   >
+    <title>Good food, better company | Gourmet au Catering</title>
+    <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <header class="site-header">
+      <nav class="navbar wrap" aria-label="Main navigation">
+        <a class="brand" href="Index.html"
+          ><span class="brand-mark" aria-hidden="true">g.</span
+          ><span
+            >Gourmet au Catering<small
+              >GOOD FOOD. BEAUTIFUL GATHERINGS.</small
+            ></span
+          ></a
+        ><button
+          class="menu-toggle"
+          id="menuToggle"
+          type="button"
+          aria-label="Open navigation menu"
+          aria-expanded="false"
+          aria-controls="navLinks"
+        >
+          Menu <span aria-hidden="true">&#9776;</span>
+        </button>
+        <div class="nav-links" id="navLinks">
+          <a href="Index.html">Home</a><a href="Index.html#about">Our story</a
+          ><a href="Menu.html">The menu</a
+          ><a class="button small" href="Contact.html"
+            >Plan your event <span aria-hidden="true">&nearr;</span></a
+          >
         </div>
-
-        <div class="nav-links">
-            <a href="#about">About</a>
-            <a href="Menu.html">Menu</a>
-            <a href="Contact.html">Contact</a>
+      </nav>
+    </header>
+    <main id="main">
+      <section class="hero wrap">
+        <div class="hero-copy">
+          <p class="eyebrow">
+            <span class="line"></span> SEASONAL CATERING, THOUGHTFULLY MADE
+          </p>
+          <h1>Good food.<br>Better <em>company.</em></h1>
+          <p class="hero-description">
+            For the moments that bring us together.<br>Beautifully prepared
+            food, warm hospitality, and every detail taken care of.
+          </p>
+          <div class="button-row">
+            <a class="button" href="Menu.html"
+              >Explore our menu <span aria-hidden="true">&nearr;</span></a
+            ><a class="text-link" href="Contact.html"
+              >Let&rsquo;s plan something <span aria-hidden="true">&nearr;</span></a
+            >
+          </div>
+          <div class="hero-note">
+            <span aria-hidden="true">&#10035;</span>
+            <p>
+              From intimate dinners to grand celebrations.<br><strong
+                >There&rsquo;s always room at our table.</strong
+              >
+            </p>
+          </div>
         </div>
-    </nav>
-</header>
-
-
-<!-- Hero Section -->
-<section class="hero" id="home">
-    <img src="https://www.w3schools.com/w3images/hamburger.jpg"
-     alt="Elegant table setting for a catering event"
-     loading="lazy"
-
-    <div class="hero-text">
-        Gourmet Catering 
-    </div>
-</section>
-
-
-<!-- About Section -->
-<section class="about" id="about">
-
-    <div class="about-image">
-        <img src="https://www.w3schools.com/w3images/tablesetting2.jpg" alt="Table Setting">
-    </div>
-
-    <div class="about-content">
-        <h1>About Catering</h1>
-
-        <h4>Tradition since 1889</h4>
-
-        <p>
-            The Catering was founded in blabla by Mr. Smith in lorem ipsum dolor sit amet, consectetur adipiscing elit consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute iruredolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.We only use <span>seasonal ingridients</span>.
+        <div class="hero-visual">
+          <img
+            class="hero-photo"
+            src="assets/hero.jpg"
+            alt="An inviting restaurant table set for an evening gathering"
+            fetchpriority="high"
+            width="1600"
+            height="1067"
+         >
+          <div class="photo-caption">
+            <span class="tiny-dot"></span> MADE FOR MEMORABLE MOMENTS
+          </div>
+          <div class="season-note">
+            Fresh ingredients.<br><em>Endless possibilities.</em
+            ><span aria-hidden="true">&#10035;</span>
+          </div>
+        </div>
+      </section>
+      <div class="values-strip">
+        <div class="wrap">
+          <span>SEASONAL INGREDIENTS</span><span aria-hidden="true">&#10035;</span
+          ><span>MADE WITH CARE</span><span aria-hidden="true">&#10035;</span
+          ><span>THOUGHTFUL SERVICE</span><span aria-hidden="true">&#10035;</span
+          ><span>EVERY OCCASION</span>
+        </div>
+      </div>
+      <section class="section wrap story" id="about">
+        <div class="story-image">
+          <img
+            src="assets/garden.jpg"
+            alt="A vibrant plate of seasonal vegetables"
+            loading="lazy"
+            width="800"
+            height="700"
+         ><span class="image-label">A FRESH PERSPECTIVE ON CATERING</span>
+        </div>
+        <div class="story-copy">
+          <p class="eyebrow">OUR STORY</p>
+          <h2>
+            It starts with ingredients.<br>It ends with <em>memories.</em>
+          </h2>
+          <p>
+            At Gourmet au Catering, we believe the best gatherings begin with
+            good food. Our kitchen brings seasonal ingredients, familiar
+            flavours, and thoughtful presentation to your table.
+          </p>
+          <p>
+            From a slow breakfast with friends to a celebration with everyone
+            you love, we make space for what matters: enjoying the moment
+            together.
+          </p>
+          <a class="text-link" href="Contact.html"
+            >Make yourself at home <span aria-hidden="true">&nearr;</span></a
+          >
+        </div>
+      </section>
+      <section class="section services">
+        <div class="wrap">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">YOUR OCCASION, OUR CARE</p>
+              <h2>A place at <em>every table.</em></h2>
+            </div>
+            <a class="text-link" href="Contact.html">Talk about your event &nearr;</a>
+          </div>
+          <div class="service-grid">
+            <article>
+              <span class="service-number">01 /</span>
+              <h3>Private dinners</h3>
+              <p>
+                An intimate evening, a considered menu, and the luxury of being
+                present with your guests.
+              </p>
+            </article>
+            <article>
+              <span class="service-number">02 /</span>
+              <h3>Corporate events</h3>
+              <p>
+                Breakfast meetings and team gatherings with fresh food that
+                gives everyone something to talk about.
+              </p>
+            </article>
+            <article>
+              <span class="service-number">03 /</span>
+              <h3>Celebrations</h3>
+              <p>
+                Birthdays, milestones, and just-because occasions. Bring your
+                people; we&rsquo;ll bring the flavour.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+      <section class="section wrap">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow">FROM OUR KITCHEN</p>
+            <h2>A taste of <em>what&rsquo;s to come.</em></h2>
+          </div>
+          <a class="text-link" href="Menu.html">View the full menu &nearr;</a>
+        </div>
+        <p id="featuredStatus" role="status">
+          Bringing the menu to your table&hellip;
         </p>
-
-    
-
-        <p class="light-text">
-           Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum consectetur adipiscing elit, sed do eiusmod temporincididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-
-
-        </p>
-    </div>
-
-</section>
-
-
-<hr>
-
-
-<!-- Service Information -->
-<section class="home-info">
-    <h1>Made for memorable gatherings</h1>
-    <p class="service-tagline">
-    Quality food and thoughtful service for every occasion.
-</p>
-    <p>Seasonal ingredients, thoughtful presentation, and friendly service for every event.</p>
-    <div class="home-info-items">
-        <span>Private dinners</span>
-        <span>Corporate events</span>
-        <span>Celebrations</span>
-    </div>
-</section>
-
-
-<hr>
-
-
-<!-- Footer -->
-<footer>
-    <p>
-        Made with care by
-        
-            Pranav, Priya, Jyoti
-        
-    </p>
-</footer>
-```
-
-</body>
+        <div class="food-grid" id="featuredMenu"></div>
+        <button class="text-link" type="button" id="retryFeatured" hidden>
+          Try loading the menu again &nearr;
+        </button>
+      </section>
+      <section class="gather-cta wrap">
+        <p class="eyebrow">LET&rsquo;S MAKE IT MEMORABLE</p>
+        <h2>Your people.<br>Our food. <em>A beautiful gathering.</em></h2>
+        <a class="button light" href="Contact.html">Plan your event &nearr;</a>
+      </section>
+    </main>
+    <footer class="site-footer">
+      <div class="wrap footer-grid">
+        <div>
+          <a class="footer-brand" href="Index.html"
+            >Gourmet au Catering<span class="accent">.</span></a
+          >
+          <p>
+            Seasonal food. Thoughtful service.<br>A little more joy around the
+            table.
+          </p>
+        </div>
+        <div>
+          <p class="eyebrow">COME GATHER WITH US</p>
+          <a href="Menu.html">Explore the menu &nearr;</a
+          ><a href="Contact.html">Plan a gathering &nearr;</a>
+        </div>
+        <div>
+          <p class="eyebrow">THE PROJECT</p>
+          <p>Made with care by<br>Pranav, Priya, Jyoti</p>
+          <a href="Admin.html">Staff sign in &nearr;</a>
+        </div>
+      </div>
+      <div class="wrap footer-bottom">
+        <span>&copy; 2026 Gourmet au Catering</span
+        ><span>A university catering website project</span>
+      </div>
+    </footer>
+  </body>
 </html>
-                                

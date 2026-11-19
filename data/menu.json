@@ -1,0 +1,56 @@
+[
+  {
+    "id": "bread-basket",
+    "name": "Bread Basket",
+    "category": "breakfast",
+    "description": "Fresh baked fruit breads and warm muffins",
+    "price": 5.5,
+    "image": "/assets/bread.jpg",
+    "available": true
+  },
+  {
+    "id": "belgian-waffle",
+    "name": "Belgian Waffle",
+    "category": "breakfast",
+    "description": "Vanilla batter with malted flour and berries",
+    "price": 7.5,
+    "image": "/assets/waffle.jpg",
+    "available": true
+  },
+  {
+    "id": "blueberry-pancakes",
+    "name": "Blueberry Pancakes",
+    "category": "breakfast",
+    "description": "Stacked with syrup, butter, and fresh berries",
+    "price": 8.5,
+    "image": "/assets/pancakes.jpg",
+    "available": true
+  },
+  {
+    "id": "honey-almond-granola",
+    "name": "Honey Almond Granola",
+    "category": "kitchen",
+    "description": "Toasted oats, raisins, almonds, and dates",
+    "price": 7,
+    "image": "/assets/granola.jpg",
+    "available": true
+  },
+  {
+    "id": "scrambled-eggs",
+    "name": "Scrambled Eggs",
+    "category": "kitchen",
+    "description": "Roasted pepper, garlic, and green onions",
+    "price": 7.5,
+    "image": "/assets/eggs.jpg",
+    "available": true
+  },
+  {
+    "id": "seasonal-garden-plate",
+    "name": "Seasonal Garden Plate",
+    "category": "kitchen",
+    "description": "Market vegetables with herbs and house dressing",
+    "price": 9.5,
+    "image": "/assets/garden.jpg",
+    "available": true
+  }
+]
