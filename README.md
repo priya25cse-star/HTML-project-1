@@ -4,9 +4,12 @@ A complete catering website by **Pranav, Priya, Jyoti**, upgraded in the existin
 
 ## Quick start (Windows PowerShell)
 
+For a fresh clone, use the commands below. If already cloned, open PowerShell in the repository folder and begin with `npm.cmd ci`; do not clone inside the existing folder.
+
 ```powershell
-Set-Location -LiteralPath 'C:\Users\LENOVO\Desktop\webdev - project\HTML-project-1\HTML-project-1'
-npm.cmd install
+git clone https://github.com/priya25cse-star/HTML-project-1.git
+Set-Location -LiteralPath '.\HTML-project-1'
+npm.cmd ci
 npm.cmd run setup
 npm.cmd start
 ```
@@ -17,13 +20,19 @@ Open **http://localhost:3000**. If `PORT` differs in `.env`, use that port. Open
 
 Use `npm.cmd`, since PowerShell may block `npm.ps1`. Use Express rather than opening HTML directly or using Live Server.
 
+## Prerequisites and dependencies
+
+Install Node.js 24 or newer (npm is included). Use a MongoDB Atlas database user/connection string or a running local MongoDB server. Chrome or Edge is needed for browser tests; Postman is optional for API demonstrations.
+
+`npm.cmd ci` installs the versions in `package-lock.json`: Express, Mongoose, dotenv, Helmet and express-rate-limit at runtime, plus Supertest, Playwright and html-validate for development/testing. No global npm packages are required.
+
 ## Features
 
 - Warm cream, forest green and terracotta design; local food photography, responsive layouts and shared navigation/footer.
 - Homepage story and services, with featured dishes loaded from the menu API.
 - Dynamic menu, search, category filters, USD prices, availability and a daily special derived from actual menu data.
 - Cart add/remove, quantity limits, integer-cent totals and persistence across refresh. Only IDs and quantities are stored in the browser; the server computes final prices from the menu file.
-- Real MongoDB order requests and booking requests. Booking redirects only after database persistence. Failures retain the form/cart; duplicate clicks are blocked while sending.
+- Real MongoDB orders with customer name/contact number, plus booking requests. Booking redirects only after database persistence. Failures retain the form/cart; duplicate clicks are blocked while sending.
 - Accessible labels, keyboard controls, focus indicators, skip links, mobile menu, reduced-motion support and live success/error messages.
 - Staff dashboard: login/logout, counts, booking/order status changes and deletion with confirmation, menu creation/editing/deletion and availability controls.
 - External recipe inspiration via TheMealDB, explicitly separate from purchasable dishes, with a timeout, caching, empty state and failure handling.
@@ -79,16 +88,18 @@ HTML-project-1/
     TEST-RESULTS.md          Verified results and environment limitations
     STARTUP-TROUBLESHOOTING.md  Backend startup and Atlas troubleshooting
     PRE-SUBMISSION-AUDIT.md  Final evaluation and Git safety audit
-    Gourmet-Catering.postman_collection.json
+    Gourmet au Catering - Third Evaluation/  Postman v3 YAML collection
+    FINAL-IMPROVEMENTS.md    Current changes and fresh verification
+    PUBLICATION-VERIFICATION.md  Final verification before publication
   README.md
-  Projrct Charter            Original project document preserved
+  PROJECT_CHARTER.md         Project scope, architecture, outcomes and team
 ```
 
-`.env`, `node_modules/`, `.vscode/`, runtime files and browser screenshots in `test-results/` remain local and ignored. Git history is retained; no automatic commit or push is performed.
+`.env`, `node_modules/`, `.vscode/`, runtime files and browser screenshots in `test-results/` remain local and ignored. Git history and team credits are retained. The third-evaluation improvements include contactable orders, legacy-order compatibility, the project charter and reproducible verification. Historical reports describe their execution-time Git state; use the GitHub branch/PR history for current publication status.
 
 ## Environment
 
-`.env.example` documents all options. Alternatively, create `.env` from that template **only if you do not already have one**.
+`.env.example` documents required settings; optional test/browser overrides are listed below. Alternatively, create `.env` from that template **only if you do not already have one**.
 
 | Variable           | Meaning                                                                                                               |
 | ------------------ | --------------------------------------------------------------------------------------------------------------------- |
@@ -103,6 +114,15 @@ HTML-project-1/
 | `CHROME_PATH`      | Optional installed browser executable for browser tests                                                               |
 
 For Atlas, grant the database user the required access and allow your IP in Atlas Network Access. Never copy credentials into JavaScript, screenshots, Postman exports or Git.
+
+For a new Atlas setup:
+
+1. Create or select your cluster and create a database user with the required access to your application database. This is different from your Atlas website login.
+2. Add your current client IP to the project's Network Access list.
+3. Use the Node.js driver connection template from Atlas and fill it privately in `MONGODB_URI` inside ignored `.env`. Percent-encode special characters in credentials. Choose an application database explicitly for a new deployment; preserve an existing working URI.
+4. Set your own admin username/password and session secret, or let `npm.cmd run setup` generate missing local settings. Start Express and inspect `/api/health`; a working database reports `connected`.
+
+Do not disable TLS verification to resolve connection problems. See [Atlas troubleshooting](https://www.mongodb.com/docs/atlas/troubleshoot-connection/) and `npm.cmd run diagnose:db` for safe diagnostics.
 
 If MongoDB is unavailable, the public website, JSON menu and menu administration still work. Booking/order APIs return 503; they do not pretend to save anything. Startup makes up to three attempts for transient failures and retries an unsuccessful transient connection cycle after 15 seconds. Authentication, URI and certificate configuration errors require correction and restart. `/api/health` returns an explicit `database` field. Initial network timeouts are bounded.
 
@@ -166,12 +186,16 @@ Order creation accepts:
 
 ```json
 {
+  "customerName": "Evaluation Customer",
+  "customerPhone": "9000000000",
   "items": [
     { "menuId": "bread-basket", "quantity": 2 },
     { "menuId": "belgian-waffle", "quantity": 1 }
   ]
 }
 ```
+
+Every new order requires `customerName` (1-100 characters after trimming) and `customerPhone` (a 10-digit string). Both browser and server validate these fields. Contact details are stored in MongoDB and displayed only in authenticated staff views; the public receipt contains no contact fields. They are not stored in browser localStorage. Failed requests retain the form/cart; successful requests clear both. Existing documents without these fields remain readable and their statuses can be updated; the dashboard labels them as legacy orders. No migration or update of old records is performed.
 
 The server verifies each unique menu ID and availability, accepts 1 to 100 servings per item and 1 to 50 distinct items, snapshots item names/prices and calculates the total in integer cents. Client-supplied `price`, item `name` and `total` are ignored. Orders retain their prices if the menu changes later. Admin PATCH supports `Pending`, `Confirmed`, `Preparing`, `Completed`, `Cancelled`.
 
@@ -222,7 +246,9 @@ Tests use temporary menu files and uniquely named `evaluation_bookings_*` / `eva
 
 Browser tests use an installed Windows Chrome or Edge (or `CHROME_PATH`). They test menu search, filtering, cart quantities/persistence, form failure states, duplicate-submission prevention, real database success flows, admin CRUD, mobile navigation and 375/768/1440 px layouts. Only explicit **failure scenarios** are intercepted; success flows use actual APIs and MongoDB. Screenshots and a result JSON file go to ignored `test-results/`.
 
-Import the [Postman collection](docs/Gourmet-Catering.postman_collection.json) for reproducible API demonstrations. Set credentials locally, enable cookies, and run requests in order. The collection captures the CSRF token and record IDs. The [evaluation guide](docs/EVALUATION.md) provides a short walkthrough and troubleshooting. See [verified test results](docs/TEST-RESULTS.md) for the latest actual run.
+Open the folder-based [Postman v3 collection](<docs/Gourmet au Catering - Third Evaluation>) in Postman using Native Git/Local View or folder import. Requests are `*.request.yaml` files; variables are in `.resources/definition.yaml`. This replaces the earlier single-file JSON export, and `.postman/resources.yaml` already references it. Set credentials locally, enable cookies, and run requests in order. Keep shared credential variables blank. Request 17 includes the required customer fields; its fake food price still verifies server-authoritative pricing. The collection captures CSRF and record IDs. The [evaluation guide](docs/EVALUATION.md) provides the walkthrough. See [publication verification](docs/PUBLICATION-VERIFICATION.md) for the final fresh run; the [local review](docs/FINAL-IMPROVEMENTS.md) and [19 November test report](docs/TEST-RESULTS.md) retain their original execution context.
+
+The [Project Charter](PROJECT_CHARTER.md) describes the scope, architecture and original team.
 
 ## Third evaluation mapping
 

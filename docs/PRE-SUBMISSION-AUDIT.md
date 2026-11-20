@@ -1,4 +1,6 @@
-# Third evaluation: final pre-submission audit
+# Historical pre-submission audit - 19 November 2026
+
+> This audit retains its original execution date. Process IDs, publication status and counts below are historical. The baseline was subsequently committed, pushed and merged. See [current changes and verification](FINAL-IMPROVEMENTS.md).
 
 Audited on **19 November 2026** using Windows PowerShell, Node.js **v24.22.3** and npm **11.19.1**. This report records actual local checks. No commit, staging, push, credential reset or `.env` overwrite was performed.
 

@@ -32,7 +32,11 @@ async function main() {
     viewport: { width: 1440, height: 1000 },
   });
   const errors = [];
+  const failedAssets = [];
   page.on("pageerror", (error) => errors.push(error.message));
+  page.on('response', response => {
+    if (response.status() >= 400 && /\.(?:html|css|js|jpg|png|svg)(?:\?|$)/.test(response.url())) failedAssets.push(new URL(response.url()).pathname);
+  });
   const pass = (title) => {
     results.push(title);
     console.log(`PASS ${title}`);
@@ -53,7 +57,7 @@ async function main() {
     pass("Homepage, live featured menu and desktop screenshot");
     await page.goto(`${base}/Menu.html`);
     await page.locator("#menuGrid .food-card").first().waitFor();
-    assert.equal(await page.locator("#menuGrid .food-card").count(), 6);
+    assert.equal(await page.locator("#menuGrid .food-card").count(), f.seedCount);
     await page.locator("#menuSearch").fill("granola");
     assert.equal(await page.locator("#menuGrid .food-card").count(), 1);
     await page.locator("#menuSearch").fill("no-such-food");
@@ -62,7 +66,7 @@ async function main() {
     await page
       .getByRole("button", { name: "From the kitchen", exact: true })
       .click();
-    assert.equal(await page.locator("#menuGrid .food-card").count(), 3);
+    assert.equal(await page.locator("#menuGrid .food-card").count(), f.seedMenu.filter(item => item.category === 'kitchen').length);
     await page.getByRole("button", { name: "All dishes", exact: true }).click();
     pass("Menu loading, search, category filters and empty state");
     await page
@@ -112,14 +116,30 @@ async function main() {
     await page
       .getByRole("button", { name: "Add Bread Basket to order", exact: true })
       .click();
-    await page.route("**/api/orders", (route) =>
-      route.fulfill({
+    let orderSubmissions = 0;
+    page.on('request', req => { if (req.url().endsWith('/api/orders') && req.method() === 'POST') orderSubmissions++; });
+    await page.locator('#placeOrder').click();
+    assert.equal(orderSubmissions, 0);
+    await page.locator('#customerName').fill('   ');
+    await page.locator('#customerPhone').fill('123');
+    await page.locator('#placeOrder').click();
+    assert.equal(orderSubmissions, 0);
+    await page.locator('#customerPhone').fill('9000000000');
+    await page.locator('#placeOrder').click();
+    assert.equal(orderSubmissions, 0);
+    await page.locator('#customerName').fill('Browser Order Customer');
+    pass('Checkout rejects empty, whitespace-name and invalid-phone details without submitting');
+    await page.route("**/api/orders", async route => {
+      await new Promise(resolve => setTimeout(resolve, 250));
+      return route.fulfill({
         status: 503,
         contentType: "application/json",
         body: JSON.stringify({ message: "Test: database unavailable" }),
-      }),
-    );
+      });
+    });
     await page.locator("#placeOrder").click();
+    assert.ok(await page.locator('#placeOrder').isDisabled());
+    assert.ok(await page.locator('#customerName').isDisabled());
     await page.waitForFunction(
       () => document.getElementById("orderMessage").dataset.state === "error",
     );
@@ -128,6 +148,9 @@ async function main() {
       /database unavailable/,
     );
     assert.equal(await page.locator("#cartTotal").innerText(), "$5.50");
+    assert.equal(orderSubmissions, 1);
+    assert.equal(await page.locator('#customerName').inputValue(), 'Browser Order Customer');
+    assert.equal(await page.locator('#customerPhone').inputValue(), '9000000000');
     await page.unroute("**/api/orders");
     pass("Failed orders show an error and preserve the cart");
     if (db) {
@@ -138,6 +161,13 @@ async function main() {
       );
       assert.equal(await db.models.Order.countDocuments(), 1);
       assert.equal((await db.models.Order.findOne()).total, 5.5);
+      const order = await db.models.Order.findOne();
+      assert.equal(order.customerName, 'Browser Order Customer');
+      assert.equal(order.customerPhone, '9000000000');
+      assert.equal(orderSubmissions, 2);
+      assert.equal(await page.locator('#customerName').inputValue(), '');
+      assert.equal(await page.locator('#customerPhone').inputValue(), '');
+      assert.equal(await page.evaluate(() => JSON.stringify(localStorage).includes('9000000000')), false);
       assert.equal(await page.locator("#cartTotal").innerText(), "$0.00");
       pass("Browser checkout persists an actual MongoDB order");
     }
@@ -205,13 +235,17 @@ async function main() {
     );
     await fresh.close();
     pass("Direct thank-you visits do not claim a saved booking");
+    const legacy = await db.models.Order.collection.insertOne({
+      items: [{ menuId: 'bread-basket', name: 'Bread Basket', quantity: 1, price: 5.5 }],
+      total: 5.5, status: 'Pending', createdAt: new Date(), updatedAt: new Date(),
+    });
     await page.goto(`${base}/Admin.html`);
     await page.locator("#username").fill(config.ADMIN_USERNAME);
     await page.locator("#password").fill(config.ADMIN_PASSWORD);
     await page.locator("#loginForm button[type=submit]").click();
     await page.locator("#dashboard").waitFor({ state: "visible" });
     await page.locator("#adminMenu table").waitFor();
-    assert.equal(await page.locator("#summaryMenu").innerText(), "6");
+    assert.equal(await page.locator("#summaryMenu").innerText(), String(f.seedCount));
     pass("Admin authentication and live summary counts");
     await page.locator("#addMenu").click();
     await page.locator("#menuName").fill("Browser evaluation bowl");
@@ -225,7 +259,7 @@ async function main() {
       .getByRole("row")
       .filter({ hasText: "Browser evaluation bowl" })
       .waitFor();
-    assert.equal(JSON.parse(await fs.readFile(f.filename, "utf8")).length, 7);
+    assert.equal(JSON.parse(await fs.readFile(f.filename, "utf8")).length, f.seedCount + 1);
     const menuRow = page
       .getByRole("row")
       .filter({ hasText: "Browser evaluation bowl" });
@@ -244,7 +278,7 @@ async function main() {
     assert.equal(newItem.available, false);
     page.once("dialog", (dialog) => dialog.dismiss());
     await menuRow.getByRole("button", { name: "Delete", exact: true }).click();
-    assert.equal(JSON.parse(await fs.readFile(f.filename, "utf8")).length, 7);
+    assert.equal(JSON.parse(await fs.readFile(f.filename, "utf8")).length, f.seedCount + 1);
     page.once("dialog", (dialog) => dialog.accept());
     await menuRow.getByRole("button", { name: "Delete", exact: true }).click();
     await page.waitForFunction(
@@ -253,7 +287,7 @@ async function main() {
           .getElementById("adminMenu")
           .textContent.includes("Browser evaluation bowl"),
     );
-    assert.equal(JSON.parse(await fs.readFile(f.filename, "utf8")).length, 6);
+    assert.equal(JSON.parse(await fs.readFile(f.filename, "utf8")).length, f.seedCount);
     pass(
       "Admin menu create, edit, availability, delete confirmation and on-disk changes",
     );
@@ -274,7 +308,18 @@ async function main() {
       await page.locator("#adminBookings .empty-state").waitFor();
       assert.equal(await db.models.Booking.countDocuments(), 0);
       await page.locator("#tabOrders").click();
-      await page.locator("#adminOrders select").selectOption("Preparing");
+      const legacyRow = page.getByRole('row').filter({ hasText: 'Customer details not recorded (legacy order)' });
+      await legacyRow.waitFor();
+      await legacyRow.locator('select').selectOption('Confirmed');
+      await page.waitForFunction(() => document.getElementById('adminMessage').textContent.includes('Status updated'));
+      assert.equal((await db.models.Order.findById(legacy.insertedId)).status, 'Confirmed');
+      page.once('dialog', dialog => dialog.accept());
+      await legacyRow.getByRole('button', { name: 'Delete', exact: true }).click();
+      await legacyRow.waitFor({ state: 'hidden' });
+      pass('Admin displays and manages legacy orders without contact fields');
+      const customerRow = page.getByRole('row').filter({ hasText: 'Browser Order Customer' });
+      assert.ok((await customerRow.innerText()).includes('9000000000'));
+      await customerRow.locator('select').selectOption("Preparing");
       await page.waitForFunction(() =>
         document
           .getElementById("adminMessage")
@@ -344,6 +389,8 @@ async function main() {
     pass(
       "Mobile navigation, Escape key, link navigation and mobile screenshot",
     );
+    assert.deepEqual(failedAssets, []);
+    pass('HTML pages, scripts, styles and image assets load without HTTP errors');
     assert.deepEqual(errors, []);
     pass("No uncaught browser JavaScript errors");
     await fs.writeFile(

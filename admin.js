@@ -201,7 +201,12 @@ function renderRecords(kind, records) {
             `${item.quantity} × ${item.name} · ${money(item.price)} each`,
           ),
         );
-      details = [list, element("strong", "", `Total: ${money(record.total)}`)];
+      details = [
+        element("strong", "", record.customerName || "Customer details not recorded (legacy order)"),
+        element("p", "", record.customerPhone || "Contact number not recorded"),
+        list,
+        element("strong", "", `Total: ${money(record.total)}`),
+      ];
     }
     const status = element("select");
     status.setAttribute(

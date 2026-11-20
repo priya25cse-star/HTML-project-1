@@ -30,6 +30,10 @@ const orderItemSchema = new Schema(
 );
 const orderSchema = new Schema(
   {
+    // Optional on stored documents so historical orders remain readable/editable.
+    // The POST API requires both fields for every new order.
+    customerName: { type: String, trim: true, maxlength: 100 },
+    customerPhone: { type: String, match: /^[0-9]{10}$/ },
     items: {
       type: [orderItemSchema],
       validate: (value) => value.length > 0 && value.length <= 50,

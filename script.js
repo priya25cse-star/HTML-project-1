@@ -220,6 +220,7 @@ async function menuPage() {
     $("cartTotal").textContent = money(totalCents / 100);
     $("cartCount").textContent = String(count);
     $("placeOrder").disabled = sending || cart.size === 0;
+    $("checkoutDetails").disabled = sending;
   }
   function change(id, amount) {
     if (sending) return;
@@ -346,8 +347,15 @@ async function menuPage() {
         : "Our seasonal special is unavailable right now. Please try loading the menu again.",
     );
   });
-  $("placeOrder").addEventListener("click", async () => {
+  $("customerName").addEventListener("input", () => $("customerName").setCustomValidity(""));
+  $("checkoutForm").addEventListener("submit", async event => {
+    event.preventDefault();
     if (sending || !cart.size) return;
+    const checkout = $("checkoutForm");
+    const customerName = $("customerName").value.trim();
+    const customerPhone = $("customerPhone").value.trim();
+    $("customerName").setCustomValidity(customerName ? "" : "Please enter your name.");
+    if (!checkout.reportValidity()) return;
     sending = true;
     renderCart();
     $("placeOrder").textContent = "Sending your request…";
@@ -356,6 +364,8 @@ async function menuPage() {
       const result = await api("/api/orders", {
         method: "POST",
         body: JSON.stringify({
+          customerName,
+          customerPhone,
           items: Array.from(cart, ([menuId, quantity]) => ({
             menuId,
             quantity,
@@ -364,6 +374,7 @@ async function menuPage() {
       });
       cart.clear();
       saveCart();
+      checkout.reset();
       message(
         $("orderMessage"),
         `Your order request is saved.\nReference: ${result.orderId}\nTotal: ${money(result.total)} · ${result.status}`,

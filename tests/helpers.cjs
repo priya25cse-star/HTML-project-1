@@ -15,6 +15,7 @@ async function fixture(options = {}) {
   const directory = await fs.mkdtemp(path.join(os.tmpdir(), "gourmet-test-"));
   const filename = path.join(directory, "menu.json");
   await fs.copyFile(path.join(__dirname, "../data/menu.json"), filename);
+  const seedMenu = JSON.parse(await fs.readFile(filename, 'utf8'));
   const app = createApp({
     config,
     menuStore: createMenuStore(filename),
@@ -30,6 +31,8 @@ async function fixture(options = {}) {
     agent,
     csrf: login.body.csrfToken,
     filename,
+    seedMenu,
+    seedCount: seedMenu.length,
     cleanup: () => fs.rm(directory, { recursive: true, force: true }),
   };
 }
@@ -42,4 +45,5 @@ const sampleMenu = {
   image: "/assets/garden.jpg",
   available: true,
 };
-module.exports = { fixture, config, sampleMenu };
+const sampleCustomer = { customerName: 'Evaluation Customer', customerPhone: '9000000000' };
+module.exports = { fixture, config, sampleMenu, sampleCustomer };

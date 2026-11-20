@@ -2,7 +2,7 @@ const { test } = require("node:test");
 const assert = require("node:assert/strict");
 const fs = require("node:fs/promises");
 const request = require("supertest");
-const { fixture, config, sampleMenu } = require("./helpers.cjs");
+const { fixture, config, sampleMenu, sampleCustomer } = require("./helpers.cjs");
 const { createApp } = require("../src/app");
 const { createMenuStore } = require("../src/utils/menu-store");
 const { orderData, bookingData } = require("../src/utils/validation");
@@ -13,7 +13,7 @@ test("File-backed menu: CRUD, IDs, validation, actual disk changes and persisten
   await request(f.app)
     .get("/api/menu")
     .expect(200)
-    .expect((res) => assert.equal(res.body.length, 6));
+    .expect((res) => assert.equal(res.body.length, f.seedCount));
   await request(f.app).get("/api/menu/bread-basket").expect(200);
   await f.agent
     .post("/api/menu")
@@ -52,7 +52,7 @@ test("File-backed menu: CRUD, IDs, validation, actual disk changes and persisten
     .set("X-CSRF-Token", f.csrf)
     .expect(204);
   await request(f.app).get(`/api/menu/${sampleMenu.id}`).expect(404);
-  assert.equal(JSON.parse(await fs.readFile(f.filename, "utf8")).length, 6);
+  assert.equal(JSON.parse(await fs.readFile(f.filename, "utf8")).length, f.seedCount);
   for (const invalid of [
     { ...sampleMenu, price: -1 },
     { ...sampleMenu, price: 1.001 },
@@ -95,7 +95,7 @@ test("Concurrent writes retain every record; failed operations do not poison the
         .expect(201),
     ),
   );
-  assert.equal(JSON.parse(await fs.readFile(f.filename, "utf8")).length, 26);
+  assert.equal(JSON.parse(await fs.readFile(f.filename, "utf8")).length, f.seedCount + 20);
   await f.agent
     .delete("/api/menu/missing")
     .set("X-CSRF-Token", f.csrf)
@@ -105,7 +105,7 @@ test("Concurrent writes retain every record; failed operations do not poison the
     .set("X-CSRF-Token", f.csrf)
     .send({ ...sampleMenu, id: "after-failure" })
     .expect(201);
-  assert.equal((await createMenuStore(f.filename).list()).length, 27);
+  assert.equal((await createMenuStore(f.filename).list()).length, f.seedCount + 21);
 });
 
 test("Missing, malformed and duplicate-ID JSON return 503 and are never overwritten", async (t) => {
@@ -294,10 +294,11 @@ test("Order validation rejects invalid/unavailable items and server prices overr
       ],
     },
   ])
-    await request(f.app).post("/api/orders").send(body).expect(400);
+    await request(f.app).post("/api/orders").send({ ...sampleCustomer, ...body }).expect(400);
   const menu = await createMenuStore(f.filename).list();
   const result = orderData(
     {
+      ...sampleCustomer,
       total: 0.01,
       items: [{ menuId: "bread-basket", quantity: 3, price: 0.01 }],
     },
@@ -307,14 +308,14 @@ test("Order validation rejects invalid/unavailable items and server prices overr
   assert.equal(result.items[0].price, 5.5);
   assert.throws(
     () =>
-      orderData({ items: [{ menuId: sampleMenu.id, quantity: 1 }] }, [
+      orderData({ ...sampleCustomer, items: [{ menuId: sampleMenu.id, quantity: 1 }] }, [
         { ...sampleMenu, available: false },
       ]),
     /unavailable/,
   );
   await request(f.app)
     .post("/api/orders")
-    .send({ items: [{ menuId: "bread-basket", quantity: 2 }] })
+    .send({ ...sampleCustomer, items: [{ menuId: "bread-basket", quantity: 2 }] })
     .expect(503);
 });
 
@@ -359,4 +360,44 @@ test("External recipes: normalize real API fields, cache, empty result and netwo
     throw new Error("network down");
   };
   await request(createApp({ config })).get("/api/recipes").expect(502);
+});
+
+test('New orders require validated customer contact information', async t => {
+  const f = await fixture(); t.after(f.cleanup);
+  const valid = { ...sampleCustomer, items: [{ menuId: 'bread-basket', quantity: 2 }] };
+  for (const changes of [
+    { customerName: undefined }, { customerName: '' }, { customerName: '   ' },
+    { customerName: 'x'.repeat(101) }, { customerName: { value: 'Name' } },
+    { customerPhone: undefined }, { customerPhone: '' }, { customerPhone: '123' },
+    { customerPhone: '90000abc00' }, { customerPhone: '90000000000' }, { customerPhone: 9000000000 },
+  ]) await request(f.app).post('/api/orders').send({ ...valid, ...changes }).expect(400);
+  const data = orderData({ ...valid, customerName: '  Evaluation Customer  ', customerPhone: ' 9000000000 ', total: 0.01 }, f.seedMenu);
+  assert.equal(data.customerName, sampleCustomer.customerName);
+  assert.equal(data.customerPhone, sampleCustomer.customerPhone);
+  assert.equal(data.total, f.seedMenu.find(item => item.id === 'bread-basket').price * 2);
+  await request(f.app).post('/api/orders').send(valid).expect(503);
+});
+
+test('Native Postman request bodies parse and order examples follow the updated contract', async () => {
+  const path = require('node:path');
+  const directory = path.join(__dirname, '../docs/Gourmet au Catering - Third Evaluation');
+  const files = (await fs.readdir(directory)).filter(name => name.endsWith('.request.yaml'));
+  assert.equal(files.length, 27);
+  let orderExample, emptyOrderExample;
+  for (const filename of files) {
+    const source = await fs.readFile(path.join(directory, filename), 'utf8');
+    assert.match(source, /\$kind: http-request/);
+    const block = source.match(/content: \|-\r?\n((?: {4}[^\r\n]*(?:\r?\n|$))*)/);
+    if (!block) continue;
+    const body = JSON.parse(block[1].split(/\r?\n/).filter(Boolean).map(line => line.slice(4)).join('\n'));
+    if (filename.startsWith('17 ')) orderExample = body;
+    if (filename.startsWith('23 ')) emptyOrderExample = body;
+  }
+  assert.ok(orderExample);
+  const menu = JSON.parse(await fs.readFile(require('node:path').join(__dirname, '../data/menu.json'), 'utf8'));
+  const result = orderData(orderExample, menu);
+  assert.equal(result.customerName, 'Postman Evaluation Customer');
+  assert.equal(result.total, menu.find(item => item.id === 'bread-basket').price * 2);
+  assert.ok(emptyOrderExample);
+  assert.throws(() => orderData(emptyOrderExample, menu), /1 to 50 items/);
 });

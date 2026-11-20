@@ -3,7 +3,7 @@ const assert = require("node:assert/strict");
 const { databaseFixture } = require("./database-fixture.cjs");
 const mongoose = require("mongoose");
 const request = require("supertest");
-const { fixture } = require("./helpers.cjs");
+const { fixture, sampleCustomer } = require("./helpers.cjs");
 
 require("../src/config").loadEnv();
 
@@ -44,6 +44,7 @@ test("REAL MongoDB: complete booking and order CRUD, server pricing and durable 
   const order = await request(f.app)
     .post("/api/orders")
     .send({
+      ...sampleCustomer,
       items: [
         { menuId: "bread-basket", quantity: 2, price: 0.01 },
         { menuId: "belgian-waffle", quantity: 3 },
@@ -52,8 +53,14 @@ test("REAL MongoDB: complete booking and order CRUD, server pricing and durable 
     })
     .expect(201);
   const orderId = order.body.orderId;
+  assert.equal(order.body.customerName, undefined);
+  assert.equal(order.body.customerPhone, undefined);
   assert.equal(order.body.total, 33.5);
   const saved = await Order.findById(orderId);
+  assert.equal(saved.customerName, sampleCustomer.customerName);
+  assert.equal(saved.customerPhone, sampleCustomer.customerPhone);
+  await request(f.app).get('/api/orders').expect(401);
+  await request(f.app).get(`/api/orders/${orderId}`).expect(401);
   assert.equal(saved.items[0].price, 5.5);
   assert.ok(saved.createdAt);
   assert.ok(saved.updatedAt);
@@ -61,7 +68,8 @@ test("REAL MongoDB: complete booking and order CRUD, server pricing and durable 
     .get("/api/orders")
     .expect(200)
     .expect((res) => assert.equal(res.body.length, 1));
-  await f.agent.get(`/api/orders/${orderId}`).expect(200);
+  await f.agent.get(`/api/orders/${orderId}`).expect(200)
+    .expect(res => assert.equal(res.body.customerPhone, sampleCustomer.customerPhone));
   await f.agent
     .patch(`/api/orders/${orderId}`)
     .set("X-CSRF-Token", f.csrf)
@@ -88,11 +96,27 @@ test("REAL MongoDB: complete booking and order CRUD, server pricing and durable 
       .findOne({ _id: new mongoose.Types.ObjectId(orderId) });
     assert.equal(freshBooking.status, "Confirmed");
     assert.equal(freshOrder.total, 33.5);
+    assert.equal(freshOrder.customerPhone, sampleCustomer.customerPhone);
   } finally {
     await verifier.disconnect();
   }
   assert.equal((await Booking.findById(bookingId)).status, "Confirmed");
   assert.equal((await Order.findById(orderId)).total, 33.5);
+  // A pre-upgrade document is inserted only into this isolated test collection.
+  const legacy = await Order.collection.insertOne({
+    items: [{ menuId: 'bread-basket', name: 'Bread Basket', quantity: 1, price: 5.5 }],
+    total: 5.5, status: 'Pending', createdAt: new Date(), updatedAt: new Date(),
+  });
+  const legacyId = legacy.insertedId.toString();
+  await f.agent.get(`/api/orders/${legacyId}`).expect(200).expect(res => {
+    assert.equal(res.body.customerName, undefined);
+    assert.equal(res.body.customerPhone, undefined);
+  });
+  await request(f.app).get(`/api/orders/${legacyId}`).expect(401);
+  await f.agent.patch(`/api/orders/${legacyId}`).set('X-CSRF-Token', f.csrf)
+    .send({ status: 'Confirmed' }).expect(200);
+  assert.equal((await Order.findById(legacyId)).status, 'Confirmed');
+  await f.agent.delete(`/api/orders/${legacyId}`).set('X-CSRF-Token', f.csrf).expect(204);
   for (const [kind, id] of [
     ["bookings", bookingId],
     ["orders", orderId],

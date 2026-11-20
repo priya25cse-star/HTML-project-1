@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{baseUrl}}/api/menu/{{menuId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+  X-CSRF-Token: "{{csrfToken}}"
+body:
+  type: json
+  content: |-
+    {
+      "id": "{{menuId}}",
+      "name": "Evaluation seasonal soup",
+      "category": "kitchen",
+      "description": "Fictional sample dish for demonstrating persistent JSON CRUD.",
+      "price": 9.5,
+      "image": "/assets/garden.jpg",
+      "available": false
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('HTTP 200', function () { pm.response.to.have.status(200); });
+    language: text/javascript
+order: 7000

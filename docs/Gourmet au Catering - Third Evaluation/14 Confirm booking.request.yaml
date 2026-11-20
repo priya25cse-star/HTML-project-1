@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{baseUrl}}/api/bookings/{{bookingId}}"
+method: PATCH
+headers:
+  Content-Type: application/json
+  X-CSRF-Token: "{{csrfToken}}"
+body:
+  type: json
+  content: |-
+    {
+      "status": "Confirmed"
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('HTTP 200', function () { pm.response.to.have.status(200); });
+    language: text/javascript
+order: 14000

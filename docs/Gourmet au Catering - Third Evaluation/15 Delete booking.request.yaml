@@ -1,0 +1,11 @@
+$kind: http-request
+url: "{{baseUrl}}/api/bookings/{{bookingId}}"
+method: DELETE
+headers:
+  Content-Type: application/json
+  X-CSRF-Token: "{{csrfToken}}"
+scripts:
+  - type: afterResponse
+    code: pm.test('HTTP 204', function () { pm.response.to.have.status(204); });
+    language: text/javascript
+order: 15000
