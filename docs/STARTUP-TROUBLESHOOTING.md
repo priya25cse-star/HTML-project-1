@@ -1,5 +1,7 @@
 # Backend startup and Atlas connection diagnosis
 
+> Investigation findings below are historical (19 November 2026); process IDs must always be rechecked. The baseline was subsequently committed, pushed and merged. The diagnostic instructions remain useful. See [current changes and verification](FINAL-IMPROVEMENTS.md).
+
 This fix preserves the existing UI, APIs, authentication, `.env` and application data. Commands use Windows PowerShell and `npm.cmd`.
 
 ## Findings from the local investigation

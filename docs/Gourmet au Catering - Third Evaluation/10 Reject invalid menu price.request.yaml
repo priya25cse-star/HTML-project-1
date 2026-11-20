@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{baseUrl}}/api/menu"
+method: POST
+headers:
+  Content-Type: application/json
+  X-CSRF-Token: "{{csrfToken}}"
+body:
+  type: json
+  content: |-
+    {
+      "id": "evaluation-postman-{{$timestamp}}",
+      "name": "Evaluation seasonal soup",
+      "category": "kitchen",
+      "description": "Fictional sample dish for demonstrating persistent JSON CRUD.",
+      "price": -1,
+      "image": "/assets/garden.jpg",
+      "available": true
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('HTTP 400', function () { pm.response.to.have.status(400); });
+    language: text/javascript
+order: 10000

@@ -1,0 +1,17 @@
+$kind: http-request
+url: "{{baseUrl}}/api/orders/{{orderId}}"
+method: PATCH
+headers:
+  Content-Type: application/json
+  X-CSRF-Token: "{{csrfToken}}"
+body:
+  type: json
+  content: |-
+    {
+      "status": "Preparing"
+    }
+scripts:
+  - type: afterResponse
+    code: pm.test('HTTP 200', function () { pm.response.to.have.status(200); });
+    language: text/javascript
+order: 20000

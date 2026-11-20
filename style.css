@@ -701,6 +701,24 @@ button {
   font-size: 23px;
   font-weight: 400;
 }
+.checkout-form {
+  margin-top: 24px;
+}
+.checkout-form fieldset {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.checkout-form legend {
+  font-family: var(--serif);
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+.checkout-form label,
+.checkout-form input {
+  font-size: 14px;
+}
 .fine-print {
   font-size: 10px;
   line-height: 1.8;

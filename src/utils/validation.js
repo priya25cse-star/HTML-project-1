@@ -131,7 +131,10 @@ function statusData(body, allowed) {
 }
 function orderData(body, menu) {
   // Client prices are ignored; the file-backed menu is authoritative.
-  fields(body, ["items", "total"]);
+  fields(body, ["items", "total", "customerName", "customerPhone"]);
+  const customerName = text(body.customerName, "Customer name", 100);
+  const customerPhone = text(body.customerPhone, "Contact number", 10);
+  check(/^[0-9]{10}$/.test(customerPhone), "Enter a 10-digit contact number.");
   check(
     Array.isArray(body.items) &&
       body.items.length >= 1 &&
@@ -168,7 +171,7 @@ function orderData(body, menu) {
     (sum, item) => sum + Math.round(item.price * 100) * item.quantity,
     0,
   );
-  return { items, total: cents / 100 };
+  return { customerName, customerPhone, items, total: cents / 100 };
 }
 module.exports = {
   check,

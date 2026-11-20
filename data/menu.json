@@ -52,5 +52,14 @@
     "price": 9.5,
     "image": "/assets/garden.jpg",
     "available": true
+  },
+  {
+    "id": "evaluation-postman-1795111146",
+    "name": "Evaluation seasonal soup",
+    "category": "kitchen",
+    "description": "Fictional sample dish for demonstrating persistent JSON CRUD.",
+    "price": 8.25,
+    "image": "/assets/garden.jpg",
+    "available": true
   }
 ]

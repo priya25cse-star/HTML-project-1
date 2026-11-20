@@ -1,0 +1,12 @@
+$kind: http-request
+url: "{{baseUrl}}/api/menu"
+method: GET
+headers:
+  Content-Type: application/json
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('HTTP 200', function () { pm.response.to.have.status(200); });
+      const bread=pm.response.json().find(x=>x.id==='bread-basket'); if(bread) pm.collectionVariables.set('breadPrice',bread.price);
+    language: text/javascript
+order: 2000

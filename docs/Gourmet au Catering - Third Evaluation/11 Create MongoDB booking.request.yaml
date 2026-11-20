@@ -1,0 +1,23 @@
+$kind: http-request
+url: "{{baseUrl}}/api/bookings"
+method: POST
+headers:
+  Content-Type: application/json
+  X-CSRF-Token: "{{csrfToken}}"
+body:
+  type: json
+  content: |-
+    {
+      "name": "Postman Evaluation Guest",
+      "phone": "9000000000",
+      "people": 25,
+      "date": "2099-12-01",
+      "message": "Fictional API evaluation booking."
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('HTTP 201', function () { pm.response.to.have.status(201); });
+      pm.collectionVariables.set('bookingId',pm.response.json().bookingId);
+    language: text/javascript
+order: 11000

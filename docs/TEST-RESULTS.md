@@ -1,4 +1,6 @@
-# Verified test results
+# Historical test results - 19 November 2026
+
+> These execution results retain their original date. Process IDs, Git/publication state and test counts below describe that historical run. The baseline was subsequently committed, pushed and merged. See [current changes and verification](FINAL-IMPROVEMENTS.md).
 
 Verification completed on **19 November 2026**, Windows PowerShell, Node.js **v24.22.3**, npm **11.19.1**. These results describe actual executions in the local repository, not assumed functionality.
 

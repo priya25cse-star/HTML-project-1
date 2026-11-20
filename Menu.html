@@ -90,13 +90,29 @@
           <div class="cart-total">
             <span>Order total</span><strong id="cartTotal">$0.00</strong>
           </div>
+          <form id="checkoutForm" class="checkout-form">
+            <fieldset id="checkoutDetails">
+              <legend>Your details</legend>
+              <label for="customerName">Your name
+                <input type="text" id="customerName" name="customerName"
+                  autocomplete="name" maxlength="100" required placeholder="Full name">
+              </label>
+              <label for="customerPhone">Contact number
+                <input type="tel" id="customerPhone" name="customerPhone"
+                  autocomplete="tel" inputmode="numeric" pattern="[0-9]{10}"
+                  minlength="10" maxlength="10" required
+                  aria-describedby="orderPhoneHelp" placeholder="10-digit phone number">
+              </label>
+              <p id="orderPhoneHelp" class="field-help">10 digits, without spaces or country code. Our team will use this to confirm your order.</p>
+            </fieldset>
           <p class="fine-print">
             A catering order request. No online payment is collected. Final
             availability is confirmed by our team.
           </p>
-          <button type="button" class="button full" id="placeOrder" disabled>
+          <button type="submit" class="button full" id="placeOrder" disabled>
             Send order request &nearr;
           </button>
+          </form>
           <p id="orderMessage" role="status" class="form-message"></p>
         </aside>
       </div>

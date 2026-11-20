@@ -1,0 +1,10 @@
+$kind: collection
+description: Run in order. Set adminUsername/adminPassword locally from .env; enable cookies. Actual menu and MongoDB writes occur. Use fictional data; sample records are deleted by later requests. Recipes require network access. Bread Basket must exist and be available.
+variables:
+  baseUrl: http://localhost:3000
+  adminUsername: ""
+  adminPassword: ""
+  csrfToken: ""
+  menuId: ""
+  bookingId: ""
+  orderId: ""
