@@ -4,6 +4,9 @@
   "description": "Gourmet au Catering: Express, JSON menu storage and MongoDB bookings and orders",
   "main": "server.js",
   "scripts": {
+    "build:frontend": "node scripts/build-frontend.js",
+    "test:frontend": "node --test tests/frontend.test.js",
+    "test:frontend:browser": "node tests/browser.cjs --frontend",
     "test": "node --test --test-concurrency=1 tests/*.test.js",
     "test:db": "node --test --test-concurrency=1 tests/mongodb.test.js",
     "test:browser": "node tests/browser.cjs",

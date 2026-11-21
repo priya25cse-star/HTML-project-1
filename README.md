@@ -20,6 +20,33 @@ Open **http://localhost:3000**. If `PORT` differs in `.env`, use that port. Open
 
 Use `npm.cmd`, since PowerShell may block `npm.ps1`. Use Express rather than opening HTML directly or using Live Server.
 
+## Vercel frontend with the existing Render backend
+
+Vercel publishes only the generated static frontend; Express remains at `https://gourmet-catering-backend.onrender.com`. In the **existing** Vercel project's Build and Deployment settings, use:
+
+| Setting | Value |
+| --- | --- |
+| Framework Preset | **Other** |
+| Build Command | `npm run build:frontend` |
+| Output Directory | `frontend-dist` |
+| Root Directory | **repository root** (leave blank/default) |
+
+`vercel.json` pins Other with `framework: null`, the build command and output directory. Keep `.html` URLs: `cleanUrls` is disabled. The build retains the original page names and creates lowercase `index.html` for `/`. It copies only the five public pages, `style.css`, `script.js`, `admin.js`, and allowlisted image/font/media files under `assets/`; asset source notes, `.env`, MongoDB credentials, backend code, menu storage, dependencies and private source files are excluded. `frontend-dist/` is generated and Git-ignored. When adding a new public script or stylesheet, add it to the explicit build allowlist.
+
+The sole API rewrite proxies `/api/:path*` to `https://gourmet-catering-backend.onrender.com/api/:path*`. Browser requests stay on the frontend origin, preserving the existing cookie/CSRF admin flow, INR prices, cart, orders and bookings. No backend credentials or `API_BASE_URL` override are needed on Vercel. Render's configuration and customer records are unchanged by this frontend build.
+
+```powershell
+npm.cmd run build:frontend
+npm.cmd run test:frontend
+npm.cmd run check
+npm.cmd test
+npm.cmd run test:frontend:browser
+```
+
+The frontend unit tests need no database. Full API/database and browser tests need MongoDB and use isolated test collections; set `TEST_MONGODB_URI` to a separate test database if desired. The frontend browser command serves **generated static files** on one port and proxies API requests to an isolated local Express fixture on another. This checks the same-origin integration without sending test orders to Render. GitHub Actions repeats these checks on Linux with a disposable MongoDB service, including the case-sensitive `Index.html` and `index.html` paths.
+
+See [deployment diagnosis and verification](docs/VERCEL-STATIC-DEPLOYMENT.md) for confirmed configuration faults, runtime-log limitations and production verification steps. After merging, redeploy the existing Vercel project from the updated `main` branch.
+
 ## Prerequisites and dependencies
 
 Install Node.js 24 or newer (npm is included). Use a MongoDB Atlas database user/connection string or a running local MongoDB server. Chrome or Edge is needed for browser tests; Postman is optional for API demonstrations.
