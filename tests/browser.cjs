@@ -10,7 +10,15 @@ async function main() {
   const f = await fixture({ models: db.models });
   const server = f.app.listen(0, "127.0.0.1");
   await new Promise((resolve) => server.once("listening", resolve));
-  const base = `http://127.0.0.1:${server.address().port}`;
+  let base = `http://127.0.0.1:${server.address().port}`;
+  let frontend;
+  if (process.argv.includes("--frontend")) {
+    await require("../scripts/build-frontend").buildFrontend();
+    frontend = require("./frontend-server.cjs").createFrontendServer({ backendOrigin: base });
+    await new Promise(resolve => frontend.listen(0, "127.0.0.1", resolve));
+    base = `http://127.0.0.1:${frontend.address().port}`;
+    console.log("Testing generated frontend-dist over HTTP with a local API proxy and isolated backend fixture.");
+  }
   const chromePaths = [
     process.env.CHROME_PATH,
     "C:/Program Files/Google/Chrome/Application/chrome.exe",
@@ -404,6 +412,7 @@ async function main() {
     console.log(`Browser checks: ${results.length} passed. Real MongoDB: verified. Database success flows skipped: 0.`);
   } finally {
     await browser.close();
+    if (frontend) await new Promise(resolve => frontend.close(resolve));
     await new Promise((resolve) => server.close(resolve));
     await f.cleanup();
     if (db) await db.cleanup();
