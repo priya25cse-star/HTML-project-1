@@ -1,4 +1,4 @@
-﻿# Gourmet au Catering
+# Gourmet au Catering
 
 A complete catering website by **Pranav, Priya, Jyoti**, upgraded in the existing repository for the university third evaluation. It uses HTML, CSS, vanilla JavaScript, Node.js, Express and MongoDB/Mongoose. The original page names, branding and six menu dishes are preserved.
 
@@ -30,7 +30,7 @@ Install Node.js 24 or newer (npm is included). Use a MongoDB Atlas database user
 
 - Warm cream, forest green and terracotta design; local food photography, responsive layouts and shared navigation/footer.
 - Homepage story and services, with featured dishes loaded from the menu API.
-- Dynamic menu, search, category filters, USD prices, availability and a daily special derived from actual menu data.
+- Dynamic menu, search, category filters, INR (₹) prices, availability and a daily special derived from actual menu data.
 - Cart add/remove, quantity limits, integer-cent totals and persistence across refresh. Only IDs and quantities are stored in the browser; the server computes final prices from the menu file.
 - Real MongoDB orders with customer name/contact number, plus booking requests. Booking redirects only after database persistence. Failures retain the form/cart; duplicate clicks are blocked while sending.
 - Accessible labels, keyboard controls, focus indicators, skip links, mobile menu, reduced-motion support and live success/error messages.

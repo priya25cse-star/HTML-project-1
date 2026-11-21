@@ -33,11 +33,11 @@ test("File-backed menu: CRUD, IDs, validation, actual disk changes and persisten
   await f.agent
     .put(`/api/menu/${sampleMenu.id}`)
     .set("X-CSRF-Token", f.csrf)
-    .send({ ...sampleMenu, price: 13.5, available: false })
+    .send({ ...sampleMenu, price: 520, available: false })
     .expect(200);
   assert.equal(
     (await createMenuStore(f.filename).get(sampleMenu.id)).price,
-    13.5,
+    520,
   );
   const restarted = createApp({
     config,
@@ -304,8 +304,8 @@ test("Order validation rejects invalid/unavailable items and server prices overr
     },
     menu,
   );
-  assert.equal(result.total, 16.5);
-  assert.equal(result.items[0].price, 5.5);
+  assert.equal(result.total, 750);
+  assert.equal(result.items[0].price, 250);
   assert.throws(
     () =>
       orderData({ ...sampleCustomer, items: [{ menuId: sampleMenu.id, quantity: 1 }] }, [
@@ -362,7 +362,7 @@ test("External recipes: normalize real API fields, cache, empty result and netwo
   await request(createApp({ config })).get("/api/recipes").expect(502);
 });
 
-test('New orders require validated customer contact information', async t => {
+test('New orders require validated customer contact information and exact contract', async t => {
   const f = await fixture(); t.after(f.cleanup);
   const valid = { ...sampleCustomer, items: [{ menuId: 'bread-basket', quantity: 2 }] };
   for (const changes of [
@@ -371,6 +371,34 @@ test('New orders require validated customer contact information', async t => {
     { customerPhone: undefined }, { customerPhone: '' }, { customerPhone: '123' },
     { customerPhone: '90000abc00' }, { customerPhone: '90000000000' }, { customerPhone: 9000000000 },
   ]) await request(f.app).post('/api/orders').send({ ...valid, ...changes }).expect(400);
+
+  // Exact regression check for "Request contains unsupported fields."
+  const frontendPayload = {
+    customerName: 'Priya Customer',
+    customerPhone: '9876543210',
+    items: [{ menuId: 'bread-basket', quantity: 1 }],
+  };
+  const processed = orderData(frontendPayload, f.seedMenu);
+  assert.equal(processed.customerName, 'Priya Customer');
+  assert.equal(processed.customerPhone, '9876543210');
+  assert.equal(processed.items.length, 1);
+  assert.equal(processed.total, f.seedMenu.find(item => item.id === 'bread-basket').price);
+
+  await request(f.app)
+    .post('/api/orders')
+    .send({ ...frontendPayload, unsupportedField: true })
+    .expect(400)
+    .expect(res => assert.equal(res.body.message, 'Request contains unsupported fields.'));
+
+  await request(f.app)
+    .post('/api/orders')
+    .send({
+      ...frontendPayload,
+      items: [{ menuId: 'bread-basket', quantity: 1, extraData: 'malicious' }],
+    })
+    .expect(400)
+    .expect(res => assert.equal(res.body.message, 'Request contains unsupported fields.'));
+
   const data = orderData({ ...valid, customerName: '  Evaluation Customer  ', customerPhone: ' 9000000000 ', total: 0.01 }, f.seedMenu);
   assert.equal(data.customerName, sampleCustomer.customerName);
   assert.equal(data.customerPhone, sampleCustomer.customerPhone);

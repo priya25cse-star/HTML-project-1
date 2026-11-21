@@ -25,7 +25,11 @@ function createApp(options = {}) {
           scriptSrc: ["'self'"],
           styleSrc: ["'self'"],
           imgSrc: ["'self'", "https:", "data:"],
-          connectSrc: ["'self'"],
+          connectSrc: [
+            "'self'",
+            ...(config.FRONTEND_URL ? [config.FRONTEND_URL] : []),
+            ...(config.BACKEND_URL ? [config.BACKEND_URL] : []),
+          ],
           upgradeInsecureRequests: config.NODE_ENV === "production" ? [] : null,
         },
       },
@@ -34,17 +38,60 @@ function createApp(options = {}) {
     }),
   );
   app.use(express.json({ limit: "20kb" }));
+
+  function isAllowedOrigin(origin, host) {
+    if (!origin) return true;
+    try {
+      const originUrl = new URL(origin);
+      if (originUrl.host === host) return true;
+      const configured = [
+        config.FRONTEND_URL,
+        ...(config.ALLOWED_ORIGINS ? config.ALLOWED_ORIGINS.split(",") : []),
+      ]
+        .map((s) => s && s.trim())
+        .filter(Boolean);
+      for (const item of configured) {
+        try {
+          if (new URL(item).origin === originUrl.origin) return true;
+        } catch {
+          if (item === originUrl.host || item === originUrl.origin) return true;
+        }
+      }
+      if (
+        originUrl.hostname.endsWith(".vercel.app") ||
+        originUrl.hostname === "localhost" ||
+        originUrl.hostname === "127.0.0.1"
+      ) {
+        return true;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  }
+
   app.use("/api", (req, res, next) => {
     res.set("Cache-Control", "no-store");
-    if (!["GET", "HEAD", "OPTIONS"].includes(req.method) && req.get("origin")) {
-      try {
-        if (new URL(req.get("origin")).host !== req.get("host"))
-          return res
-            .status(403)
-            .json({ message: "Cross-origin requests are not allowed." });
-      } catch {
-        return res.status(403).json({ message: "Invalid request origin." });
+    const origin = req.get("origin");
+    if (origin) {
+      if (!isAllowedOrigin(origin, req.get("host"))) {
+        return res
+          .status(403)
+          .json({ message: "Cross-origin requests are not allowed." });
       }
+      res.set("Access-Control-Allow-Origin", origin);
+      res.set("Access-Control-Allow-Credentials", "true");
+      res.set(
+        "Access-Control-Allow-Methods",
+        "GET, HEAD, POST, PUT, PATCH, DELETE, OPTIONS",
+      );
+      res.set(
+        "Access-Control-Allow-Headers",
+        "Content-Type, X-CSRF-Token, Authorization",
+      );
+    }
+    if (req.method === "OPTIONS") {
+      return res.sendStatus(204);
     }
     next();
   });

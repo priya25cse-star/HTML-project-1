@@ -1,6 +1,7 @@
 "use strict";
 // Shared DOM helpers and navigation are loaded from script.js first.
 let csrfToken = "";
+let authToken = "";
 let menuItems = [];
 const bookingStatuses = ["Pending", "Confirmed", "Cancelled"];
 const orderStatuses = [
@@ -12,6 +13,7 @@ const orderStatuses = [
 ];
 function showLogin() {
   csrfToken = "";
+  authToken = "";
   $("loginPanel").hidden = false;
   $("dashboard").hidden = true;
   $("logout").hidden = true;
@@ -21,13 +23,21 @@ function showLogin() {
 }
 async function adminRequest(url, options = {}) {
   let response;
+  const baseUrl = window.API_BASE_URL || "";
+  const targetUrl = url.startsWith("http") ? url : `${baseUrl}${url}`;
+  const headers = {
+    "Content-Type": "application/json",
+    "X-CSRF-Token": csrfToken,
+    ...options.headers,
+  };
+  if (authToken) {
+    headers["Authorization"] = `Bearer ${authToken}`;
+  }
   try {
-    response = await fetch(url, {
+    response = await fetch(targetUrl, {
       ...options,
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-Token": csrfToken,
-      },
+      headers,
+      credentials: "include",
       signal: AbortSignal.timeout(15000),
     });
   } catch {
@@ -193,19 +203,20 @@ function renderRecords(kind, records) {
       ];
     } else {
       const list = element("ul", "record-items");
+      const orderCurrency = record.currency || "USD";
       for (const item of record.items)
         list.append(
           element(
             "li",
             "",
-            `${item.quantity} × ${item.name} · ${money(item.price)} each`,
+            `${item.quantity} × ${item.name} · ${money(item.price, orderCurrency)} each`,
           ),
         );
       details = [
         element("strong", "", record.customerName || "Customer details not recorded (legacy order)"),
         element("p", "", record.customerPhone || "Contact number not recorded"),
         list,
-        element("strong", "", `Total: ${money(record.total)}`),
+        element("strong", "", `Total: ${money(record.total, orderCurrency)}${!record.currency || record.currency === "USD" ? " (historical USD)" : ""}`),
       ];
     }
     const status = element("select");
@@ -312,6 +323,7 @@ async function refreshDashboard() {
 }
 async function signedIn(result) {
   csrfToken = result.csrfToken;
+  authToken = result.token || "";
   $("loginPanel").hidden = true;
   $("dashboard").hidden = false;
   $("logout").hidden = false;

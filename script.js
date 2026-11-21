@@ -1,9 +1,10 @@
-﻿"use strict";
+"use strict";
 const $ = (id) => document.getElementById(id);
-const money = (value) =>
-  new Intl.NumberFormat("en-US", { style: "currency", currency: "USD" }).format(
-    value,
-  );
+const money = (value, currency = "INR") =>
+  new Intl.NumberFormat(currency === "USD" ? "en-US" : "en-IN", {
+    style: "currency",
+    currency: currency || "INR",
+  }).format(value);
 function element(tag, className, value) {
   const node = document.createElement(tag);
   if (className) node.className = className;
@@ -17,10 +18,13 @@ function message(target, value, state = "") {
 }
 async function api(url, options = {}) {
   let response;
+  const baseUrl = window.API_BASE_URL || "";
+  const targetUrl = url.startsWith("http") ? url : `${baseUrl}${url}`;
   try {
-    response = await fetch(url, {
+    response = await fetch(targetUrl, {
       ...options,
       headers: { "Content-Type": "application/json", ...options.headers },
+      credentials: "include",
       signal: AbortSignal.timeout(15000),
     });
   } catch {

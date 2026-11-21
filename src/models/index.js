@@ -39,6 +39,7 @@ const orderSchema = new Schema(
       validate: (value) => value.length > 0 && value.length <= 50,
     },
     total: { type: Number, required: true, min: 0 },
+    currency: { type: String, default: "INR" },
     status: { type: String, enum: orderStatuses, default: "Pending" },
   },
   { timestamps: true },
