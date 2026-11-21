@@ -55,13 +55,14 @@ test("REAL MongoDB: complete booking and order CRUD, server pricing and durable 
   const orderId = order.body.orderId;
   assert.equal(order.body.customerName, undefined);
   assert.equal(order.body.customerPhone, undefined);
-  assert.equal(order.body.total, 33.5);
+  assert.equal(order.body.total, 1550);
   const saved = await Order.findById(orderId);
   assert.equal(saved.customerName, sampleCustomer.customerName);
   assert.equal(saved.customerPhone, sampleCustomer.customerPhone);
+  assert.equal(saved.currency, "INR");
   await request(f.app).get('/api/orders').expect(401);
   await request(f.app).get(`/api/orders/${orderId}`).expect(401);
-  assert.equal(saved.items[0].price, 5.5);
+  assert.equal(saved.items[0].price, 250);
   assert.ok(saved.createdAt);
   assert.ok(saved.updatedAt);
   await f.agent
@@ -95,13 +96,13 @@ test("REAL MongoDB: complete booking and order CRUD, server pricing and durable 
       .collection(Order.collection.collectionName)
       .findOne({ _id: new mongoose.Types.ObjectId(orderId) });
     assert.equal(freshBooking.status, "Confirmed");
-    assert.equal(freshOrder.total, 33.5);
+    assert.equal(freshOrder.total, 1550);
     assert.equal(freshOrder.customerPhone, sampleCustomer.customerPhone);
   } finally {
     await verifier.disconnect();
   }
   assert.equal((await Booking.findById(bookingId)).status, "Confirmed");
-  assert.equal((await Order.findById(orderId)).total, 33.5);
+  assert.equal((await Order.findById(orderId)).total, 1550);
   // A pre-upgrade document is inserted only into this isolated test collection.
   const legacy = await Order.collection.insertOne({
     items: [{ menuId: 'bread-basket', name: 'Bread Basket', quantity: 1, price: 5.5 }],

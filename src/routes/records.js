@@ -26,7 +26,9 @@ module.exports = function recordRoutes({
         message: `${kind} request saved successfully.`,
         [`${kind.toLowerCase()}Id`]: record.id,
         status: record.status,
-        ...(kind === "Order" ? { total: record.total } : {}),
+        ...(kind === "Order"
+          ? { total: record.total, currency: record.currency || "INR" }
+          : {}),
       });
     },
   );

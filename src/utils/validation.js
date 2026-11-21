@@ -86,9 +86,9 @@ function menuData(body) {
     typeof body.price === "number" &&
       Number.isFinite(body.price) &&
       body.price > 0 &&
-      body.price <= 10000 &&
+      body.price <= 50000 &&
       Math.abs(body.price * 100 - Math.round(body.price * 100)) < 0.000001,
-    "Price must be greater than zero, at most 10000, with at most two decimal places.",
+    "Price must be greater than zero, at most 50000, with at most two decimal places.",
   );
   const image = text(body.image, "Image URL or path", 1000);
   check(
@@ -131,7 +131,7 @@ function statusData(body, allowed) {
 }
 function orderData(body, menu) {
   // Client prices are ignored; the file-backed menu is authoritative.
-  fields(body, ["items", "total", "customerName", "customerPhone"]);
+  fields(body, ["items", "total", "customerName", "customerPhone", "currency"]);
   const customerName = text(body.customerName, "Customer name", 100);
   const customerPhone = text(body.customerPhone, "Contact number", 10);
   check(/^[0-9]{10}$/.test(customerPhone), "Enter a 10-digit contact number.");
@@ -171,7 +171,7 @@ function orderData(body, menu) {
     (sum, item) => sum + Math.round(item.price * 100) * item.quantity,
     0,
   );
-  return { customerName, customerPhone, items, total: cents / 100 };
+  return { customerName, customerPhone, items, total: cents / 100, currency: "INR" };
 }
 module.exports = {
   check,

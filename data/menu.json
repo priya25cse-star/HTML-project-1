@@ -4,7 +4,7 @@
     "name": "Bread Basket",
     "category": "breakfast",
     "description": "Fresh baked fruit breads and warm muffins",
-    "price": 5.5,
+    "price": 250,
     "image": "/assets/bread.jpg",
     "available": true
   },
@@ -13,7 +13,7 @@
     "name": "Belgian Waffle",
     "category": "breakfast",
     "description": "Vanilla batter with malted flour and berries",
-    "price": 7.5,
+    "price": 350,
     "image": "/assets/waffle.jpg",
     "available": true
   },
@@ -22,7 +22,7 @@
     "name": "Blueberry Pancakes",
     "category": "breakfast",
     "description": "Stacked with syrup, butter, and fresh berries",
-    "price": 8.5,
+    "price": 420,
     "image": "/assets/pancakes.jpg",
     "available": true
   },
@@ -31,7 +31,7 @@
     "name": "Honey Almond Granola",
     "category": "kitchen",
     "description": "Toasted oats, raisins, almonds, and dates",
-    "price": 7,
+    "price": 320,
     "image": "/assets/granola.jpg",
     "available": true
   },
@@ -40,7 +40,7 @@
     "name": "Scrambled Eggs",
     "category": "kitchen",
     "description": "Roasted pepper, garlic, and green onions",
-    "price": 7.5,
+    "price": 350,
     "image": "/assets/eggs.jpg",
     "available": true
   },
@@ -49,7 +49,7 @@
     "name": "Seasonal Garden Plate",
     "category": "kitchen",
     "description": "Market vegetables with herbs and house dressing",
-    "price": 9.5,
+    "price": 480,
     "image": "/assets/garden.jpg",
     "available": true
   },
@@ -58,7 +58,7 @@
     "name": "Evaluation seasonal soup",
     "category": "kitchen",
     "description": "Fictional sample dish for demonstrating persistent JSON CRUD.",
-    "price": 8.25,
+    "price": 380,
     "image": "/assets/garden.jpg",
     "available": true
   }

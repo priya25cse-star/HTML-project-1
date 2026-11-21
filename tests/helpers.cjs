@@ -41,7 +41,7 @@ const sampleMenu = {
   name: "Evaluation garden bowl",
   category: "kitchen",
   description: "Illustrative seasonal vegetables for an API test.",
-  price: 12.25,
+  price: 450,
   image: "/assets/garden.jpg",
   available: true,
 };

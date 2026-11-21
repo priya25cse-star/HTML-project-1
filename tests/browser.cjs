@@ -72,18 +72,18 @@ async function main() {
     await page
       .getByRole("button", { name: "Add Bread Basket to order", exact: true })
       .click();
-    assert.equal(await page.locator("#cartTotal").innerText(), "$5.50");
+    assert.equal(await page.locator("#cartTotal").innerText(), "₹250.00");
     await page
       .getByRole("button", { name: "Add one Bread Basket", exact: true })
       .click();
-    assert.equal(await page.locator("#cartTotal").innerText(), "$11.00");
+    assert.equal(await page.locator("#cartTotal").innerText(), "₹500.00");
     await page
       .getByRole("button", { name: "Remove one Bread Basket", exact: true })
       .click();
-    assert.equal(await page.locator("#cartTotal").innerText(), "$5.50");
+    assert.equal(await page.locator("#cartTotal").innerText(), "₹250.00");
     await page.reload();
     await page.locator("#menuGrid .food-card").first().waitFor();
-    assert.equal(await page.locator("#cartTotal").innerText(), "$5.50");
+    assert.equal(await page.locator("#cartTotal").innerText(), "₹250.00");
     pass(
       "Cart add, increment, decrement, totals and persistence across reload",
     );
@@ -93,7 +93,7 @@ async function main() {
         exact: true,
       })
       .click();
-    assert.equal(await page.locator("#cartTotal").innerText(), "$0.00");
+    assert.equal(await page.locator("#cartTotal").innerText(), "₹0.00");
     assert.ok(await page.locator("#placeOrder").isDisabled());
     await page.locator("#specialButton").click();
     assert.match(
@@ -147,7 +147,7 @@ async function main() {
       await page.locator("#orderMessage").innerText(),
       /database unavailable/,
     );
-    assert.equal(await page.locator("#cartTotal").innerText(), "$5.50");
+    assert.equal(await page.locator("#cartTotal").innerText(), "₹250.00");
     assert.equal(orderSubmissions, 1);
     assert.equal(await page.locator('#customerName').inputValue(), 'Browser Order Customer');
     assert.equal(await page.locator('#customerPhone').inputValue(), '9000000000');
@@ -160,7 +160,7 @@ async function main() {
           document.getElementById("orderMessage").dataset.state === "success",
       );
       assert.equal(await db.models.Order.countDocuments(), 1);
-      assert.equal((await db.models.Order.findOne()).total, 5.5);
+      assert.equal((await db.models.Order.findOne()).total, 250);
       const order = await db.models.Order.findOne();
       assert.equal(order.customerName, 'Browser Order Customer');
       assert.equal(order.customerPhone, '9000000000');
@@ -168,7 +168,7 @@ async function main() {
       assert.equal(await page.locator('#customerName').inputValue(), '');
       assert.equal(await page.locator('#customerPhone').inputValue(), '');
       assert.equal(await page.evaluate(() => JSON.stringify(localStorage).includes('9000000000')), false);
-      assert.equal(await page.locator("#cartTotal").innerText(), "$0.00");
+      assert.equal(await page.locator("#cartTotal").innerText(), "₹0.00");
       pass("Browser checkout persists an actual MongoDB order");
     }
     await page.goto(`${base}/Contact.html`);
@@ -252,7 +252,7 @@ async function main() {
     await page
       .locator("#menuDescription")
       .fill("Fictional item for browser CRUD verification.");
-    await page.locator("#menuPrice").fill("14.25");
+    await page.locator("#menuPrice").fill("450");
     await page.locator("#menuForm button[type=submit]").click();
     await page.locator("#menuDialog").waitFor({ state: "hidden" });
     await page
@@ -264,17 +264,17 @@ async function main() {
       .getByRole("row")
       .filter({ hasText: "Browser evaluation bowl" });
     await menuRow.getByRole("button", { name: "Edit", exact: true }).click();
-    await page.locator("#menuPrice").fill("15.50");
+    await page.locator("#menuPrice").fill("520");
     await page.locator("#menuAvailable").selectOption("false");
     await page.locator("#menuForm button[type=submit]").click();
     await page.locator("#menuDialog").waitFor({ state: "hidden" });
     await page.waitForFunction(() =>
-      document.getElementById("adminMenu").textContent.includes("$15.50"),
+      document.getElementById("adminMenu").textContent.includes("₹520.00"),
     );
     const newItem = JSON.parse(await fs.readFile(f.filename, "utf8")).find(
       (item) => item.name === "Browser evaluation bowl",
     );
-    assert.equal(newItem.price, 15.5);
+    assert.equal(newItem.price, 520);
     assert.equal(newItem.available, false);
     page.once("dialog", (dialog) => dialog.dismiss());
     await menuRow.getByRole("button", { name: "Delete", exact: true }).click();

@@ -38,11 +38,19 @@ function createAuth(config = process.env) {
       .split(";")
       .map((s) => s.trim())
       .find((s) => s.startsWith(`${cookieName}=`));
-    if (!raw) return null;
-    const [token, signed] = raw.slice(cookieName.length + 1).split(".");
-    if (!configured() || !token || !signed || !equal(signature(token), signed))
-      return null;
-    return token;
+    if (raw) {
+      const [token, signed] = raw.slice(cookieName.length + 1).split(".");
+      if (configured() && token && signed && equal(signature(token), signed))
+        return token;
+    }
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith("Bearer ")) {
+      const rawBearer = authHeader.slice(7).trim();
+      const [token, signed] = rawBearer.split(".");
+      if (configured() && token && signed && equal(signature(token), signed))
+        return token;
+    }
+    return null;
   }
   function session(req) {
     cleanup();
@@ -76,11 +84,15 @@ function createAuth(config = process.env) {
       res.cookie(cookieName, `${token}.${signature(token)}`, {
         httpOnly: true,
         secure,
-        sameSite: "strict",
+        sameSite: config.COOKIE_SAMESITE || "strict",
         maxAge,
         path: "/",
       });
-      res.json({ username: config.ADMIN_USERNAME, csrfToken });
+      res.json({
+        username: config.ADMIN_USERNAME,
+        csrfToken,
+        token: `${token}.${signature(token)}`,
+      });
     },
     requireAdmin(req, res, next) {
       const current = session(req);
@@ -108,7 +120,7 @@ function createAuth(config = process.env) {
       res.clearCookie(cookieName, {
         httpOnly: true,
         secure,
-        sameSite: "strict",
+        sameSite: config.COOKIE_SAMESITE || "strict",
         path: "/",
       });
       res.status(204).end();
